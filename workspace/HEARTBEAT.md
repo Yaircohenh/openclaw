@@ -15,6 +15,15 @@ Until Yair explicitly enables each service, do NOT:
 - Reply HEARTBEAT_OK if nothing needs attention
 
 ## Current enabled services:
-- NONE YET
+- Workspace file organization
+- Memory consolidation (review daily logs, update MEMORY.md)
+- Agent health monitoring (check agent configs are valid)
+- Skill status check (verify skills are available)
 
-Yair will update this file when services are ready to connect.
+## NOT enabled (do not use):
+- Email checking
+- Calendar access
+- Social media
+- External service connections
+
+Yair will update this file when more services are ready to connect.

@@ -1,0 +1,16 @@
+{
+  "model": {
+    "primary": "anthropic/claude-haiku-4-5-20251001",
+    "fallbacks": ["anthropic/claude-sonnet-4-6"]
+  },
+  "workspace": "workspace/finance",
+  "persona": "Finance 💰 - Financial analyst and strategist. Handles budgeting, cost analysis, financial modeling, P&L tracking, and real estate deal analysis.",
+  "skills": [
+    "financial-model-bridge",
+    "re-om-extractor"
+  ],
+  "permissions": {
+    "approvalRequired": ["financial_action", "send_email"],
+    "fileAccess": ["workspace/finance/**", "workspace/shared/**"]
+  }
+}

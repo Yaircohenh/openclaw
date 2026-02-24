@@ -1,4 +1,29 @@
 {
   "version": 1,
-  "jobs": []
+  "jobs": [
+    {
+      "id": "daily-memory-review",
+      "name": "Daily Memory Review",
+      "schedule": "0 22 * * *",
+      "agent": "main",
+      "task": "Review today's memory files in memory/YYYY-MM-DD.md. Extract key decisions, lessons learned, and important context. Update MEMORY.md with anything worth keeping long-term. Remove stale or outdated entries from MEMORY.md.",
+      "enabled": true
+    },
+    {
+      "id": "system-health-check",
+      "name": "System Health Check",
+      "schedule": "0 */6 * * *",
+      "agent": "ops",
+      "task": "Run a health check: verify all agent configs are valid JSON, check disk space, verify services are responsive, check for any error logs. Report issues to the orchestrator.",
+      "enabled": true
+    },
+    {
+      "id": "weekly-expense-summary",
+      "name": "Weekly Expense Summary",
+      "schedule": "0 9 * * 1",
+      "agent": "accounting",
+      "task": "Generate a weekly expense summary from the invoice-manager service. Include: total spent, by category, overdue invoices, and any anomalies. Report to the orchestrator for Yair.",
+      "enabled": false
+    }
+  ]
 }

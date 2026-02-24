@@ -1,0 +1,49 @@
+{
+  "id": "deploy",
+  "name": "Deploy",
+  "version": "1.0.0",
+  "description": "Vercel deployment skill with approval gates. Preview deploys are auto-approved; production deploys require user approval.",
+  "author": "ClawOS",
+
+  "runtime": {
+    "type": "shell",
+    "entrypoint": "deploy.sh",
+    "timeout": 300000,
+    "env": {}
+  },
+
+  "dependencies": {
+    "system": ["vercel", "node"]
+  },
+
+  "input": {
+    "type": "object",
+    "properties": {
+      "mode": {
+        "type": "string",
+        "enum": ["preview", "production"],
+        "description": "Deployment mode"
+      },
+      "projectDir": {
+        "type": "string",
+        "description": "Path to the project directory to deploy"
+      }
+    },
+    "required": ["mode", "projectDir"]
+  },
+
+  "permissions": {
+    "network": ["api.vercel.com"],
+    "shell": ["vercel", "npm"],
+    "maxMemoryMb": 512,
+    "maxCpuSeconds": 300
+  },
+
+  "security": {
+    "sandboxed": true,
+    "approvalRequired": true
+  },
+
+  "agents": ["ops", "ninja"],
+  "tags": ["deployment", "vercel", "devops"]
+}

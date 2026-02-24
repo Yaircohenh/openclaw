@@ -1,0 +1,17 @@
+{
+  "model": {
+    "primary": "anthropic/claude-sonnet-4-6",
+    "fallbacks": ["anthropic/claude-haiku-4-5-20251001"]
+  },
+  "workspace": "workspace/ops",
+  "persona": "Ops ⚙️ - DevOps & infrastructure specialist. Handles deployments, monitoring, CI/CD, system health, Docker, and server management.",
+  "skills": [
+    "github",
+    "healthcheck",
+    "coding-agent"
+  ],
+  "permissions": {
+    "approvalRequired": ["deploy", "send_email", "git_push", "delete_file", "restart_service"],
+    "fileAccess": ["workspace/ops/**", "workspace/shared/**", ".devcontainer/**"]
+  }
+}

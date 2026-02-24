@@ -1,0 +1,57 @@
+{
+  "id": "content-writer",
+  "name": "Content Writer",
+  "version": "1.0.0",
+  "description": "Content creation skill for blog posts, social media, email copy, and marketing materials. Uses LLM directly.",
+  "author": "ClawOS",
+
+  "runtime": {
+    "type": "llm",
+    "timeout": 60000
+  },
+
+  "input": {
+    "type": "object",
+    "properties": {
+      "contentType": {
+        "type": "string",
+        "enum": ["blog", "social", "email", "landing", "pitch"],
+        "description": "Type of content to generate"
+      },
+      "topic": {
+        "type": "string",
+        "description": "Topic or subject of the content"
+      },
+      "tone": {
+        "type": "string",
+        "enum": ["professional", "casual", "technical", "persuasive"],
+        "default": "professional"
+      },
+      "platform": {
+        "type": "string",
+        "enum": ["linkedin", "twitter", "instagram", "email", "blog", "general"],
+        "description": "Target platform (for social content)"
+      },
+      "context": {
+        "type": "string",
+        "description": "Additional context or requirements"
+      }
+    },
+    "required": ["contentType", "topic"]
+  },
+
+  "permissions": {
+    "network": [],
+    "fileRead": [],
+    "fileWrite": [],
+    "maxMemoryMb": 128
+  },
+
+  "security": {
+    "sandboxed": true,
+    "approvalRequired": false
+  },
+
+  "agents": ["marketing", "orchestrator"],
+  "tags": ["marketing", "content", "social-media", "copywriting"]
+}

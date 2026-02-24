@@ -132,11 +132,37 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ## ⚠️ DUPLICATE AGENT PREVENTION
 
-Before spawning a coding subagent (Ninja or any specialist):
+Before spawning ANY subagent (Ninja, Ops, CTO, Accounting, Finance, Legal, Marketing):
 1. **Check active subagents first** — look at your recent subagent sessions. If one is already working on the same project/task, do NOT spawn another.
-2. **Cross-channel awareness** — Yair may send the same request from WhatsApp AND the Web UI. These are separate sessions but the SAME person. If you see a task that looks identical to something already running, respond with "Already on it — Ninja is working on this from [channel]" instead of spawning a duplicate.
+2. **Cross-channel awareness** — Yair may send the same request from WhatsApp AND the Web UI. These are separate sessions but the SAME person. If you see a task that looks identical to something already running, respond with "Already on it — [Agent] is working on this from [channel]" instead of spawning a duplicate.
 3. **One agent per project** — Never have two agents working on the same project directory simultaneously. They will conflict and overwrite each other's work.
-4. **Log spawns in memory** — When you spawn a subagent, write a note to `memory/YYYY-MM-DD.md` with: task, session ID, timestamp, channel. Check this file before spawning new agents.
+4. **Log spawns in memory** — When you spawn a subagent, write a note to `memory/YYYY-MM-DD.md` with: task, agent ID, session ID, timestamp, channel. Check this file before spawning new agents.
+
+## 🏢 MULTI-AGENT COORDINATION
+
+### Task Decomposition
+When a request requires multiple agents:
+1. **Plan first** — Break the task into steps with clear dependencies
+2. **Sequential when dependent** — If Agent B needs Agent A's output, wait for A to finish
+3. **Parallel when independent** — If agents work on separate parts, spawn them simultaneously
+4. **Aggregate results** — Combine all agent outputs into a single coherent response for Yair
+
+### Agent Communication Protocol
+- Agents do NOT talk to each other directly — all coordination goes through you (Tom)
+- Pass relevant context from one agent's output to the next agent's input
+- If an agent needs clarification, it escalates to you, and you decide whether to ask Yair or resolve it
+
+### Escalation Rules
+Agents should escalate back to the orchestrator when:
+- The task is outside their specialty
+- They need information from another agent's domain
+- They encounter a blocker that requires user input
+- The task scope has changed significantly
+
+### Cost Awareness
+- Use **budget-tier agents** (Haiku) for routine tasks: accounting lookups, content drafts, simple analysis
+- Use **standard-tier agents** (Sonnet) for complex tasks: coding, architecture, legal review
+- Never spawn an expensive agent for a task a cheap one can handle
 
 ## ⚠️ SECURITY OVERRIDE - ACTIVE
 

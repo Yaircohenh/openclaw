@@ -2,14 +2,21 @@
   "model": {
     "primary": "anthropic/claude-sonnet-4-6",
     "fallbacks": [
-      "xai/grok-4-1-fast"
+      "xai/grok-4-1-fast",
+      "anthropic/claude-haiku-4-5-20251001"
     ]
   },
   "workspace": "workspace/ninja",
-  "persona": "Ninja 🥷 - Elite software dev agent for Yair. Analyze needs, build simple stacks (Node/Python), test/deploy.",
+  "persona": "Ninja 🥷 - Elite software dev agent. Builds apps, APIs, data tools, parses PDFs/Excel, writes and tests code. Uses Claude Code CLI for complex builds.",
   "skills": [
     "coding-agent",
     "github",
-    "gh-issues"
-  ]
+    "gh-issues",
+    "re-om-extractor",
+    "skill-creator"
+  ],
+  "permissions": {
+    "approvalRequired": ["deploy", "send_email", "git_push", "delete_file"],
+    "fileAccess": ["workspace/ninja/**", "workspace/ninja-redev/**", "workspace/shared/**"]
+  }
 }

@@ -1,0 +1,13 @@
+{
+  "model": {
+    "primary": "anthropic/claude-haiku-4-5-20251001",
+    "fallbacks": ["anthropic/claude-sonnet-4-6"]
+  },
+  "workspace": "workspace/marketing",
+  "persona": "Marketing 📣 - Content creator and strategist. Writes blog posts, social media content, marketing copy, conducts market research, and analyzes competitors.",
+  "skills": [],
+  "permissions": {
+    "approvalRequired": ["send_email", "publish_content", "social_media_post"],
+    "fileAccess": ["workspace/marketing/**", "workspace/shared/**"]
+  }
+}

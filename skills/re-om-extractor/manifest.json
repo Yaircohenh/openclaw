@@ -1,0 +1,47 @@
+{
+  "id": "re-om-extractor",
+  "name": "RE OM Extractor",
+  "version": "1.0.0",
+  "description": "Extracts structured data from Real Estate Offering Memorandums (OMs). Supports offline regex parsing and LLM-powered extraction via Claude.",
+  "author": "Ninja",
+
+  "runtime": {
+    "type": "python",
+    "entrypoint": "om_extractor.py",
+    "timeout": 120000,
+    "env": {
+      "ANTHROPIC_API_KEY": "${env:ANTHROPIC_API_KEY}"
+    }
+  },
+
+  "dependencies": {
+    "system": ["python3"],
+    "python": ["pymupdf", "anthropic"]
+  },
+
+  "input": {
+    "type": "object",
+    "properties": {
+      "file": { "type": "string", "description": "Path to PDF file" },
+      "mode": { "type": "string", "enum": ["offline", "llm"], "default": "llm" },
+      "pages": { "type": "array", "items": { "type": "number" }, "description": "Page numbers to render as images for vision" }
+    },
+    "required": ["file"]
+  },
+
+  "permissions": {
+    "fileRead": ["${input.file}"],
+    "fileWrite": ["${skill.workdir}/*"],
+    "network": ["api.anthropic.com"],
+    "maxMemoryMb": 512,
+    "maxCpuSeconds": 120
+  },
+
+  "security": {
+    "sandboxed": true,
+    "approvalRequired": false
+  },
+
+  "agents": ["ninja", "finance", "orchestrator"],
+  "tags": ["real-estate", "pdf", "extraction", "financial-analysis"]
+}

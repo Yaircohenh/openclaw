@@ -1,0 +1,54 @@
+{
+  "id": "invoice-manager-bridge",
+  "name": "Invoice Manager Bridge",
+  "version": "1.0.0",
+  "description": "Read-only HTTP bridge to the invoice-manager service API for querying invoices, vendors, reports, and dashboard analytics.",
+  "author": "ClawOS",
+
+  "runtime": {
+    "type": "node",
+    "entrypoint": "bridge.ts",
+    "timeout": 30000,
+    "env": {
+      "INVOICE_MANAGER_URL": "${env:INVOICE_MANAGER_URL:http://localhost:3001}"
+    }
+  },
+
+  "dependencies": {
+    "system": ["node"],
+    "node": []
+  },
+
+  "input": {
+    "type": "object",
+    "properties": {
+      "endpoint": {
+        "type": "string",
+        "description": "API endpoint path (e.g., /api/invoices, /api/dashboard)",
+        "enum": ["/api/invoices", "/api/dashboard", "/api/reports", "/api/vendors", "/api/categories", "/api/projects"]
+      },
+      "params": {
+        "type": "object",
+        "description": "Query parameters (status, vendor, category, dateFrom, dateTo, type)"
+      }
+    },
+    "required": ["endpoint"]
+  },
+
+  "permissions": {
+    "network": ["localhost:3001"],
+    "fileRead": [],
+    "fileWrite": [],
+    "maxMemoryMb": 128,
+    "maxCpuSeconds": 30
+  },
+
+  "security": {
+    "sandboxed": true,
+    "approvalRequired": false,
+    "readOnly": true
+  },
+
+  "agents": ["accounting", "finance", "orchestrator"],
+  "tags": ["invoicing", "accounting", "reports", "bridge"]
+}

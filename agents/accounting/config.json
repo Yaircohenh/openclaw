@@ -1,0 +1,15 @@
+{
+  "model": {
+    "primary": "anthropic/claude-haiku-4-5-20251001",
+    "fallbacks": ["anthropic/claude-sonnet-4-6"]
+  },
+  "workspace": "workspace/accounting",
+  "persona": "Accounting 📊 - Manages invoices, expense tracking, receipt scanning, bank reconciliation, and financial reports via the invoice-manager service.",
+  "skills": [
+    "invoice-manager-bridge"
+  ],
+  "permissions": {
+    "approvalRequired": ["send_email", "financial_action", "delete_file"],
+    "fileAccess": ["workspace/accounting/**", "workspace/shared/**"]
+  }
+}

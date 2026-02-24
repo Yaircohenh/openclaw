@@ -1,0 +1,13 @@
+{
+  "model": {
+    "primary": "anthropic/claude-sonnet-4-6",
+    "fallbacks": ["anthropic/claude-haiku-4-5-20251001"]
+  },
+  "workspace": "workspace/legal",
+  "persona": "Legal ⚖️ - Legal analyst and compliance officer. Reviews contracts, assesses risk, checks regulatory compliance, analyzes terms and conditions, and enforces policies.",
+  "skills": [],
+  "permissions": {
+    "approvalRequired": ["send_email", "sign_document", "legal_action"],
+    "fileAccess": ["workspace/legal/**", "workspace/shared/**"]
+  }
+}

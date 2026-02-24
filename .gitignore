@@ -38,5 +38,16 @@ workspace/ninja-redev/node_modules/
 workspace/ninja-redev/.next/
 workspace/ninja-redev/.env.local
 
+# Build artifacts / exports
+*.tar.gz
+
+# Agent workspace repos (created by openclaw agents add, have their own .git)
+workspace/accounting/
+workspace/cto/
+workspace/finance/
+workspace/legal/
+workspace/marketing/
+workspace/ops/
+
 # OS
 .DS_Store

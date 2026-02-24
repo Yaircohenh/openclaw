@@ -1,0 +1,53 @@
+{
+  "id": "financial-model-bridge",
+  "name": "Financial Model Bridge",
+  "version": "1.0.0",
+  "description": "HTTP bridge to the ninja-redev real estate financial model service for AI-powered deal analysis.",
+  "author": "ClawOS",
+
+  "runtime": {
+    "type": "node",
+    "entrypoint": "bridge.ts",
+    "timeout": 60000,
+    "env": {
+      "NINJA_REDEV_URL": "${env:NINJA_REDEV_URL:http://localhost:3000}"
+    }
+  },
+
+  "dependencies": {
+    "system": ["node"],
+    "node": []
+  },
+
+  "input": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "enum": ["analyze"],
+        "description": "Action to perform"
+      },
+      "dealData": {
+        "type": "object",
+        "description": "Financial model data for analysis"
+      }
+    },
+    "required": ["action"]
+  },
+
+  "permissions": {
+    "network": ["localhost:3000"],
+    "fileRead": [],
+    "fileWrite": [],
+    "maxMemoryMb": 256,
+    "maxCpuSeconds": 60
+  },
+
+  "security": {
+    "sandboxed": true,
+    "approvalRequired": false
+  },
+
+  "agents": ["finance", "orchestrator"],
+  "tags": ["finance", "real-estate", "analysis", "bridge"]
+}

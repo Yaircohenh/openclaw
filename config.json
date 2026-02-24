@@ -9,6 +9,36 @@
         "id": "ninja",
         "workspace": "workspace/ninja",
         "defaultModel": "anthropic/claude-sonnet-4-6"
+      },
+      {
+        "id": "ops",
+        "workspace": "workspace/ops",
+        "defaultModel": "anthropic/claude-sonnet-4-6"
+      },
+      {
+        "id": "cto",
+        "workspace": "workspace/cto",
+        "defaultModel": "anthropic/claude-sonnet-4-6"
+      },
+      {
+        "id": "accounting",
+        "workspace": "workspace/accounting",
+        "defaultModel": "anthropic/claude-haiku-4-5-20251001"
+      },
+      {
+        "id": "finance",
+        "workspace": "workspace/finance",
+        "defaultModel": "anthropic/claude-haiku-4-5-20251001"
+      },
+      {
+        "id": "legal",
+        "workspace": "workspace/legal",
+        "defaultModel": "anthropic/claude-sonnet-4-6"
+      },
+      {
+        "id": "marketing",
+        "workspace": "workspace/marketing",
+        "defaultModel": "anthropic/claude-haiku-4-5-20251001"
       }
     ]
   }

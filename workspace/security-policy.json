@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "description": "ClawOS security policy — encodes rules from AGENTS.md and MEMORY.md",
+  "lastUpdated": "2026-02-24",
+  "updatedBy": "Yair",
+
+  "approval": {
+    "defaultPolicy": "require_approval",
+    "autoApproveThreshold": 0.2,
+    "defaultTtlMs": 3600000
+  },
+
+  "rules": [
+    {
+      "id": "email-send",
+      "action": "email.*",
+      "policy": "require_approval",
+      "reason": "External communication — must show draft to user first",
+      "riskScore": 0.8,
+      "agents": "*"
+    },
+    {
+      "id": "git-push",
+      "action": "git.push",
+      "policy": "require_approval",
+      "reason": "Pushes code to remote repository",
+      "riskScore": 0.6,
+      "agents": "*"
+    },
+    {
+      "id": "deploy-production",
+      "action": "deploy.production",
+      "policy": "require_approval",
+      "reason": "Production deployment — irreversible",
+      "riskScore": 0.9,
+      "agents": "*"
+    },
+    {
+      "id": "deploy-preview",
+      "action": "deploy.preview",
+      "policy": "allow_with_logging",
+      "reason": "Preview deployments are safe",
+      "riskScore": 0.2,
+      "agents": ["ninja", "ops"]
+    },
+    {
+      "id": "financial-action",
+      "action": "finance.*",
+      "policy": "require_approval",
+      "reason": "Financial actions require explicit written approval — per MEMORY.md",
+      "riskScore": 1.0,
+      "agents": "*"
+    },
+    {
+      "id": "delete-file",
+      "action": "file.delete",
+      "policy": "require_approval",
+      "reason": "File deletion is destructive — use trash over rm",
+      "riskScore": 0.5,
+      "agents": "*"
+    },
+    {
+      "id": "external-service",
+      "action": "external.*",
+      "policy": "require_approval",
+      "reason": "Any action that leaves the machine needs approval",
+      "riskScore": 0.7,
+      "agents": "*"
+    },
+    {
+      "id": "git-commit",
+      "action": "git.commit",
+      "policy": "require_approval",
+      "reason": "Git commits require explicit approval — per AGENTS.md security override",
+      "riskScore": 0.4,
+      "agents": "*"
+    },
+    {
+      "id": "file-read-workspace",
+      "action": "file.read",
+      "policy": "allow",
+      "reason": "Reading files within workspace is safe",
+      "scope": "workspace/**",
+      "riskScore": 0.0,
+      "agents": "*"
+    },
+    {
+      "id": "file-write-workspace",
+      "action": "file.write",
+      "policy": "allow_with_logging",
+      "reason": "Writing files within agent workspace is allowed",
+      "scope": "workspace/{agent}/**",
+      "riskScore": 0.1,
+      "agents": "*"
+    },
+    {
+      "id": "web-search",
+      "action": "web.search",
+      "policy": "allow",
+      "reason": "Web searches are read-only and safe",
+      "riskScore": 0.0,
+      "agents": "*"
+    },
+    {
+      "id": "npm-install",
+      "action": "shell.npm_install",
+      "policy": "allow_with_logging",
+      "reason": "Installing dependencies is routine but logged",
+      "riskScore": 0.15,
+      "agents": ["ninja", "ops", "cto"]
+    },
+    {
+      "id": "calendar-check",
+      "action": "calendar.*",
+      "policy": "deny",
+      "reason": "Calendar access not enabled — per HEARTBEAT.md restricted mode",
+      "riskScore": 1.0,
+      "agents": "*"
+    },
+    {
+      "id": "social-media",
+      "action": "social.*",
+      "policy": "deny",
+      "reason": "Social media access not enabled — per HEARTBEAT.md restricted mode",
+      "riskScore": 1.0,
+      "agents": "*"
+    }
+  ],
+
+  "denylist": [
+    { "pattern": "rm -rf /*", "reason": "Destructive system command" },
+    { "pattern": "sudo *", "reason": "Privilege escalation" },
+    { "pattern": "email.send_without_draft", "reason": "Must show draft first — per MEMORY.md" },
+    { "pattern": "billing.*", "reason": "Financial/billing actions forbidden without explicit written approval — per MEMORY.md" }
+  ],
+
+  "allowlist": [
+    { "agent": "*", "action": "file.read", "scope": "workspace/**" },
+    { "agent": "*", "action": "web.search" },
+    { "agent": "*", "action": "memory.read" },
+    { "agent": "*", "action": "memory.write", "scope": "memory/**" },
+    { "agent": "ninja", "action": "shell.npm_*" },
+    { "agent": "ninja", "action": "shell.node_*" },
+    { "agent": "ninja", "action": "shell.python3_*" },
+    { "agent": "ninja", "action": "shell.git_commit" }
+  ]
+}
