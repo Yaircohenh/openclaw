@@ -1,0 +1,81 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║         REAL ESTATE OM EXTRACTION REPORT                     ║
+║         900_West_23rd_OM                                    ║
+╚══════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROPERTY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Address:        900 West 
+23rd Street
+City/State:     Zip
+Austin, TX 78705
+Type:           N/A — 
+Stories:        30
+Units:          283
+Beds:           982
+Gross SF:       $458,518
+Net SF:         $303,995
+Lot Size:       $36,576 SF
+Parking:        N/A spaces
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RENT ROLL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Avg Unit Rent:  $4,956/mo
+Avg Bed Rent:   N/A/mo
+Avg $/SF:       $None/SF
+Occupancy:      N/A
+EGI (Yr 1):     N/A
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SOURCES & USES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Project Cost:  $159,997,004
+  Site Acquisition:  $23,200,000
+  Hard Costs:        $107,836,472
+  Soft Costs:        N/A
+Equity (35%):        $55,998,951
+Debt (65%):          N/A
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINANCIALS (YEAR 1 POST-TCO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NOI (Yr 1):          $10,506,120
+NOI (Stabilized):    N/A
+Total Expenses:      N/A
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RETURNS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IRR:             26.25%
+Equity Multiple: 2.67x
+Yield on Cost:   7.37%
+Net Profit:      N/A
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIMELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Investment:       N/A
+Construction:     N/A
+Completion (TCO): N/A
+Sale:             N/A
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CALCULATED ANALYTICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Hard Cost/GSF:    $235.18/GSF
+Hard Cost/NSF:    $354.73/NSF
+$200-280 Bench:   ✅ YES  ($235.18/GSF vs $200-280 benchmark)
+
+EXIT VALUE SENSITIVITY (on Stabilized NOI):
+  4.0%_cap:  $262,653,000  ($573/GSF)  →  profit: $102,655,996
+  4.5%_cap:  $233,469,333  ($509/GSF)  →  profit: $73,472,329
+  5.0%_cap:  $210,122,400  ($458/GSF)  →  profit: $50,125,396
+  5.5%_cap:  $191,020,364  ($417/GSF)  →  profit: $31,023,360
+  6.0%_cap:  $175,102,000  ($382/GSF)  →  profit: $15,104,996
+
+IRR Assessment:   Aggressive (20-30%)
+
+════════════════════════════════════════════════════════════════

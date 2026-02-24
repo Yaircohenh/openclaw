@@ -1,0 +1,1099 @@
+{
+  "_meta": {
+    "generated_utc": "2026-02-24T10:52:59.761101Z",
+    "source": "6719 N Lamar BLVD \u2014 model.xlsx + Podium Benchmark Update",
+    "analyst": "Ninja \ud83e\udd77 / OpenClaw",
+    "target_irr_pct": 15.0,
+    "target_em": 1.8
+  },
+  "xlsx_extracted_facts": {
+    "source": "model.xlsx \u2014 6719 N Lamar BLVD",
+    "overview": {
+      "deal_name": "6719 N Lamar BLVD",
+      "address": "6719 N Lamar BLVD, Austin TX",
+      "gross_sf": 106058.78,
+      "net_sf_total": 53151,
+      "net_residential_sf": 48751,
+      "net_retail_sf": 4400,
+      "units_total": 66,
+      "units_market_rate": 60,
+      "units_affordable": 6,
+      "parking_spaces": 63,
+      "trending": true
+    },
+    "assumptions": {
+      "resi_rent_per_nsf_per_mo": 3.2694,
+      "retail_rent_per_nsf_per_mo": 2.7,
+      "misc_income_per_unit_per_mo": 150,
+      "annual_rent_growth": 0.03,
+      "occupancy_stabilized_resi": 0.95,
+      "occupancy_at_tco_resi": 0.35,
+      "lease_up_per_month": 0.1,
+      "construction_loan_rate": 0.075,
+      "acquisition_loan_rate": 0.06,
+      "ltc_construction": 0.75,
+      "ltc_acquisition": 0.5,
+      "preconstruction_months": 15,
+      "construction_months": 20,
+      "tco": "2028-12-01",
+      "exit_cap_resi": 0.05,
+      "exit_cap_retail": 0.055,
+      "sale_months_post_tco": 48,
+      "sale_costs_resi": 0.01,
+      "sale_costs_retail": 0.035
+    },
+    "unit_mix": {
+      "1BR_count": 24,
+      "1BR_avg_sf": 583.4,
+      "1BR_rent": 1950,
+      "2BR_count": 42,
+      "2BR_avg_sf": 827.4,
+      "2BR_rent": 2850,
+      "affordable_6_units": true
+    },
+    "sources_uses": {
+      "land": 3500000,
+      "hard_costs": 19519500,
+      "hard_cost_per_gsf": 184.04,
+      "soft_costs": 5033193,
+      "cap_interest_ds_reserve": 2131441,
+      "total_project_cost": 30184134,
+      "acquisition_loan": 1750000,
+      "construction_loan": 20888101,
+      "total_debt": 22638101,
+      "equity": 7546034,
+      "equity_pct": 0.25
+    },
+    "reported_returns": {
+      "net_profit": 4992185,
+      "equity_multiple": 1.6616,
+      "irr_pct": 8.64,
+      "stabilized_yield_on_cost": 0.053,
+      "noi_yr1_post_tco": 1084738,
+      "noi_yr2_post_tco_stabilized": 1600605,
+      "noi_yr4_post_tco": 1724415,
+      "gross_sale_resi": 32737808,
+      "gross_sale_retail": 2866119,
+      "loan_payoff_at_sale": 22638100,
+      "total_sale_to_equity": 12538219,
+      "sale_year_post_tco": 4,
+      "total_hold_years": 7
+    }
+  },
+  "scenarios": {
+    "A_current": {
+      "name": "A \u2014 Current Model (XLSX baseline)",
+      "property": {
+        "gsf": 106059,
+        "nrsf": 48751,
+        "retail_sf": 4400,
+        "units": 66
+      },
+      "costs": {
+        "land": 3500000,
+        "hard_costs": 19519058,
+        "hard_cost_per_gsf": 184.04,
+        "soft_costs": 5033193,
+        "cap_interest": 1479012,
+        "total_project_cost": 29531263,
+        "total_cost_per_unit": 447443,
+        "total_cost_per_gsf": 278.44
+      },
+      "financing": {
+        "construction_rate_pct": 7.5,
+        "ltc_pct": 75.0,
+        "total_debt": 22148447,
+        "equity": 7382816,
+        "equity_pct": 25.0,
+        "annual_interest": 1661134
+      },
+      "revenue": {
+        "resi_rent_per_nsf_mo_at_start": 3.2694,
+        "resi_rent_per_nsf_mo_at_tco": 3.5726,
+        "gross_resi_at_tco_full_occ": 2089991,
+        "gross_retail_at_tco_full_occ": 155779
+      },
+      "noi": {
+        "noi_yr1_post_tco_lease_up": 880503,
+        "noi_yr2_stabilized": 1623541,
+        "noi_at_exit_yr": 1748748,
+        "yield_on_cost": 5.5,
+        "by_year_post_tco": {
+          "1": 880503,
+          "2": 1623541,
+          "3": 1685219,
+          "4": 1748748,
+          "5": 1814182
+        }
+      },
+      "exit": {
+        "resi_exit_cap_pct": 5.0,
+        "retail_exit_cap_pct": 5.5,
+        "noi_exit_resi": 1627445,
+        "noi_exit_retail": 121303,
+        "gross_sale_resi": 32548899,
+        "gross_sale_retail": 2205507,
+        "gross_sale_total": 34754406,
+        "sale_costs": 402682,
+        "net_sale_proceeds": 34351725,
+        "net_to_equity_from_sale": 12203278,
+        "implied_ppsf": 328,
+        "implied_ppu": 526582
+      },
+      "returns": {
+        "irr_pct": 10.1,
+        "irr_flag": "\ud83d\udfe1 CLOSE (10-15%)",
+        "equity_multiple": 1.502,
+        "net_profit": 4113939,
+        "total_hold_years": 6
+      },
+      "annual_cashflows": {
+        "t0": -2583985,
+        "t1": -4798830,
+        "t2": -780630,
+        "t3": -37592,
+        "t4": 24086,
+        "t5": 12290892
+      }
+    },
+    "B_updated_benchmark": {
+      "name": "B \u2014 Updated: $250/GSF podium + 8.5% debt + 5.5% cap + +10% rents + 65% LTC",
+      "property": {
+        "gsf": 106059,
+        "nrsf": 48751,
+        "retail_sf": 4400,
+        "units": 66
+      },
+      "costs": {
+        "land": 3500000,
+        "hard_costs": 26514695,
+        "hard_cost_per_gsf": 250.0,
+        "soft_costs": 5033193,
+        "cap_interest": 1799601,
+        "total_project_cost": 36847489,
+        "total_cost_per_unit": 558295,
+        "total_cost_per_gsf": 347.43
+      },
+      "financing": {
+        "construction_rate_pct": 8.5,
+        "ltc_pct": 65.0,
+        "total_debt": 23950868,
+        "equity": 12896621,
+        "equity_pct": 35.0,
+        "annual_interest": 2035824
+      },
+      "revenue": {
+        "resi_rent_per_nsf_mo_at_start": 3.5963,
+        "resi_rent_per_nsf_mo_at_tco": 3.9298,
+        "gross_resi_at_tco_full_occ": 2298991,
+        "gross_retail_at_tco_full_occ": 155779
+      },
+      "noi": {
+        "noi_yr1_post_tco_lease_up": 1013636,
+        "noi_yr2_stabilized": 1823957,
+        "noi_at_exit_yr": 1961369,
+        "yield_on_cost": 4.95,
+        "by_year_post_tco": {
+          "1": 1013636,
+          "2": 1823957,
+          "3": 1891647,
+          "4": 1961369,
+          "5": 2033182
+        }
+      },
+      "exit": {
+        "resi_exit_cap_pct": 5.5,
+        "retail_exit_cap_pct": 5.5,
+        "noi_exit_resi": 1836901,
+        "noi_exit_retail": 124468,
+        "gross_sale_resi": 33398194,
+        "gross_sale_retail": 2263055,
+        "gross_sale_total": 35661249,
+        "sale_costs": 413189,
+        "net_sale_proceeds": 35248061,
+        "net_to_equity_from_sale": 11297193,
+        "implied_ppsf": 336,
+        "implied_ppu": 540322
+      },
+      "returns": {
+        "irr_pct": -5.61,
+        "irr_flag": "\ud83d\udd34 NEGATIVE \u2014 DEAL LOSES MONEY",
+        "equity_multiple": 0.786,
+        "net_profit": -3052115,
+        "total_hold_years": 6
+      },
+      "annual_cashflows": {
+        "t0": -4513817,
+        "t1": -8382804,
+        "t2": -1022188,
+        "t3": -211867,
+        "t4": -144176,
+        "t5": 11222738
+      }
+    },
+    "C_optimistic": {
+      "name": "C \u2014 Optimistic: $250/GSF + +25% rents + 5.0% exit cap + 65% LTC + 8.5% debt",
+      "property": {
+        "gsf": 106059,
+        "nrsf": 48751,
+        "retail_sf": 4400,
+        "units": 66
+      },
+      "costs": {
+        "land": 3500000,
+        "hard_costs": 26514695,
+        "hard_cost_per_gsf": 250.0,
+        "soft_costs": 5033193,
+        "cap_interest": 1799601,
+        "total_project_cost": 36847489,
+        "total_cost_per_unit": 558295,
+        "total_cost_per_gsf": 347.43
+      },
+      "financing": {
+        "construction_rate_pct": 8.5,
+        "ltc_pct": 65.0,
+        "total_debt": 23950868,
+        "equity": 12896621,
+        "equity_pct": 35.0,
+        "annual_interest": 2035824
+      },
+      "revenue": {
+        "resi_rent_per_nsf_mo_at_start": 4.0868,
+        "resi_rent_per_nsf_mo_at_tco": 4.4657,
+        "gross_resi_at_tco_full_occ": 2612489,
+        "gross_retail_at_tco_full_occ": 155779
+      },
+      "noi": {
+        "noi_yr1_post_tco_lease_up": 1213334,
+        "noi_yr2_stabilized": 2124580,
+        "noi_at_exit_yr": 2280300,
+        "yield_on_cost": 5.77,
+        "by_year_post_tco": {
+          "1": 1213334,
+          "2": 2124580,
+          "3": 2201289,
+          "4": 2280300,
+          "5": 2361681
+        }
+      },
+      "exit": {
+        "resi_exit_cap_pct": 5.0,
+        "retail_exit_cap_pct": 5.0,
+        "noi_exit_resi": 2151980,
+        "noi_exit_retail": 128320,
+        "gross_sale_resi": 43039607,
+        "gross_sale_retail": 2566393,
+        "gross_sale_total": 45606000,
+        "sale_costs": 520220,
+        "net_sale_proceeds": 45085780,
+        "net_to_equity_from_sale": 21134913,
+        "implied_ppsf": 430,
+        "implied_ppu": 691000
+      },
+      "returns": {
+        "irr_pct": 11.26,
+        "irr_flag": "\ud83d\udfe1 CLOSE (10-15%)",
+        "equity_multiple": 1.577,
+        "net_profit": 7914500,
+        "total_hold_years": 6
+      },
+      "annual_cashflows": {
+        "t0": -4513817,
+        "t1": -8382804,
+        "t2": -822489,
+        "t3": 88756,
+        "t4": 165466,
+        "t5": 21379389
+      }
+    },
+    "D_value_engineering": {
+      "name": "D \u2014 Value-Engineering: $210/GSF + +15% rents + 5.0% exit cap + 70% LTC + 8.5% debt",
+      "property": {
+        "gsf": 106059,
+        "nrsf": 48751,
+        "retail_sf": 4400,
+        "units": 66
+      },
+      "costs": {
+        "land": 3500000,
+        "hard_costs": 22272344,
+        "hard_cost_per_gsf": 210.0,
+        "soft_costs": 5033193,
+        "cap_interest": 1713379,
+        "total_project_cost": 32518915,
+        "total_cost_per_unit": 492711,
+        "total_cost_per_gsf": 306.61
+      },
+      "financing": {
+        "construction_rate_pct": 8.5,
+        "ltc_pct": 70.0,
+        "total_debt": 22763241,
+        "equity": 9755675,
+        "equity_pct": 30.0,
+        "annual_interest": 1934875
+      },
+      "revenue": {
+        "resi_rent_per_nsf_mo_at_start": 3.7598,
+        "resi_rent_per_nsf_mo_at_tco": 4.1084,
+        "gross_resi_at_tco_full_occ": 2403490,
+        "gross_retail_at_tco_full_occ": 155779
+      },
+      "noi": {
+        "noi_yr1_post_tco_lease_up": 1080202,
+        "noi_yr2_stabilized": 1924164,
+        "noi_at_exit_yr": 2067679,
+        "yield_on_cost": 5.92,
+        "by_year_post_tco": {
+          "1": 1080202,
+          "2": 1924164,
+          "3": 1994861,
+          "4": 2067679,
+          "5": 2142682
+        }
+      },
+      "exit": {
+        "resi_exit_cap_pct": 5.0,
+        "retail_exit_cap_pct": 5.5,
+        "noi_exit_resi": 1941822,
+        "noi_exit_retail": 125857,
+        "gross_sale_resi": 38836448,
+        "gross_sale_retail": 2288305,
+        "gross_sale_total": 41124752,
+        "sale_costs": 468455,
+        "net_sale_proceeds": 40656297,
+        "net_to_equity_from_sale": 17893056,
+        "implied_ppsf": 388,
+        "implied_ppu": 623102
+      },
+      "returns": {
+        "irr_pct": 13.32,
+        "irr_flag": "\ud83d\udfe1 CLOSE (10-15%)",
+        "equity_multiple": 1.703,
+        "net_profit": 7464787,
+        "total_hold_years": 6
+      },
+      "annual_cashflows": {
+        "t0": -3414486,
+        "t1": -6341189,
+        "t2": -854674,
+        "t3": -10711,
+        "t4": 59986,
+        "t5": 18025860
+      }
+    },
+    "E_density_play": {
+      "name": "E \u2014 Density Play: 86 units + $210/GSF + +10% rents + 65% LTC + 8.5% debt",
+      "property": {
+        "gsf": 116665,
+        "nrsf": 53626,
+        "retail_sf": 4400,
+        "units": 86
+      },
+      "costs": {
+        "land": 3500000,
+        "hard_costs": 24499578,
+        "hard_cost_per_gsf": 210.0,
+        "soft_costs": 5033193,
+        "cap_interest": 1706821,
+        "total_project_cost": 34739593,
+        "total_cost_per_unit": 403949,
+        "total_cost_per_gsf": 297.77
+      },
+      "financing": {
+        "construction_rate_pct": 8.5,
+        "ltc_pct": 65.0,
+        "total_debt": 22580735,
+        "equity": 12158857,
+        "equity_pct": 35.0,
+        "annual_interest": 1919362
+      },
+      "revenue": {
+        "resi_rent_per_nsf_mo_at_start": 3.5963,
+        "resi_rent_per_nsf_mo_at_tco": 3.9298,
+        "gross_resi_at_tco_full_occ": 2528890,
+        "gross_retail_at_tco_full_occ": 155779
+      },
+      "noi": {
+        "noi_yr1_post_tco_lease_up": 1117490,
+        "noi_yr2_stabilized": 2012457,
+        "noi_at_exit_yr": 2161349,
+        "yield_on_cost": 5.79,
+        "by_year_post_tco": {
+          "1": 1117490,
+          "2": 2012457,
+          "3": 2085802,
+          "4": 2161349,
+          "5": 2239161
+        }
+      },
+      "exit": {
+        "resi_exit_cap_pct": 5.0,
+        "retail_exit_cap_pct": 5.5,
+        "noi_exit_resi": 2035935,
+        "noi_exit_retail": 125413,
+        "gross_sale_resi": 40718706,
+        "gross_sale_retail": 2280241,
+        "gross_sale_total": 42998947,
+        "sale_costs": 486995,
+        "net_sale_proceeds": 42511951,
+        "net_to_equity_from_sale": 19931216,
+        "implied_ppsf": 369,
+        "implied_ppu": 499988
+      },
+      "returns": {
+        "irr_pct": 11.26,
+        "irr_flag": "\ud83d\udfe1 CLOSE (10-15%)",
+        "equity_multiple": 1.577,
+        "net_profit": 7472006,
+        "total_hold_years": 6
+      },
+      "annual_cashflows": {
+        "t0": -4255600,
+        "t1": -7903257,
+        "t2": -801873,
+        "t3": 93094,
+        "t4": 166440,
+        "t5": 20173202
+      }
+    },
+    "F_target_15pct": {
+      "name": "F \u2014 Target 15%+ IRR: $190/GSF + lower land $2.8M + +20% rents + 4.75% cap + 72% LTC",
+      "property": {
+        "gsf": 106059,
+        "nrsf": 48751,
+        "retail_sf": 4400,
+        "units": 66
+      },
+      "costs": {
+        "land": 2800000,
+        "hard_costs": 20151168,
+        "hard_cost_per_gsf": 190.0,
+        "soft_costs": 5033193,
+        "cap_interest": 1575952,
+        "total_project_cost": 29560314,
+        "total_cost_per_unit": 447884,
+        "total_cost_per_gsf": 278.72
+      },
+      "financing": {
+        "construction_rate_pct": 8.5,
+        "ltc_pct": 72.0,
+        "total_debt": 21283426,
+        "equity": 8276888,
+        "equity_pct": 28.0,
+        "annual_interest": 1809091
+      },
+      "revenue": {
+        "resi_rent_per_nsf_mo_at_start": 3.9233,
+        "resi_rent_per_nsf_mo_at_tco": 4.2871,
+        "gross_resi_at_tco_full_occ": 2507990,
+        "gross_retail_at_tco_full_occ": 155779
+      },
+      "noi": {
+        "noi_yr1_post_tco_lease_up": 1146768,
+        "noi_yr2_stabilized": 2024372,
+        "noi_at_exit_yr": 2173990,
+        "yield_on_cost": 6.85,
+        "by_year_post_tco": {
+          "1": 1146768,
+          "2": 2024372,
+          "3": 2098075,
+          "4": 2173990,
+          "5": 2252181
+        }
+      },
+      "exit": {
+        "resi_exit_cap_pct": 4.8,
+        "retail_exit_cap_pct": 5.0,
+        "noi_exit_resi": 2046853,
+        "noi_exit_retail": 127137,
+        "gross_sale_resi": 43091643,
+        "gross_sale_retail": 2542730,
+        "gross_sale_total": 45634374,
+        "sale_costs": 519912,
+        "net_sale_proceeds": 45114462,
+        "net_to_equity_from_sale": 23831036,
+        "implied_ppsf": 430,
+        "implied_ppu": 691430
+      },
+      "returns": {
+        "irr_pct": 26.98,
+        "irr_flag": "\ud83d\udfe2 TARGET MET (15%+)",
+        "equity_multiple": 2.763,
+        "net_profit": 15760988,
+        "total_hold_years": 6
+      },
+      "annual_cashflows": {
+        "t0": -2896911,
+        "t1": -5379977,
+        "t2": -662323,
+        "t3": 215281,
+        "t4": 288984,
+        "t5": 24195934
+      }
+    }
+  },
+  "sensitivity_grids": {
+    "hard_cost_vs_exit_cap_plus10pct_rents": {
+      "hc184_cap45": {
+        "hc_per_gsf": 184,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 20.94,
+        "em": 2.253,
+        "net_profit": 13721152,
+        "total_cost": 29525323
+      },
+      "hc184_cap50": {
+        "hc_per_gsf": 184,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 15.67,
+        "em": 1.86,
+        "net_profit": 9413055,
+        "total_cost": 29525323
+      },
+      "hc184_cap55": {
+        "hc_per_gsf": 184,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 10.66,
+        "em": 1.538,
+        "net_profit": 5888249,
+        "total_cost": 29525323
+      },
+      "hc184_cap60": {
+        "hc_per_gsf": 184,
+        "exit_cap_pct": 6.0,
+        "irr_pct": 5.8,
+        "em": 1.269,
+        "net_profit": 2950911,
+        "total_cost": 29525323
+      },
+      "hc200_cap45": {
+        "hc_per_gsf": 200,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 17.46,
+        "em": 1.99,
+        "net_profit": 11553791,
+        "total_cost": 31300394
+      },
+      "hc200_cap50": {
+        "hc_per_gsf": 200,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 11.99,
+        "em": 1.621,
+        "net_profit": 7245694,
+        "total_cost": 31300394
+      },
+      "hc200_cap55": {
+        "hc_per_gsf": 200,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 6.72,
+        "em": 1.319,
+        "net_profit": 3720888,
+        "total_cost": 31300394
+      },
+      "hc200_cap60": {
+        "hc_per_gsf": 200,
+        "exit_cap_pct": 6.0,
+        "irr_pct": 1.54,
+        "em": 1.067,
+        "net_profit": 783550,
+        "total_cost": 31300394
+      },
+      "hc210_cap45": {
+        "hc_per_gsf": 210,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 15.34,
+        "em": 1.841,
+        "net_profit": 10199190,
+        "total_cost": 32409813
+      },
+      "hc210_cap50": {
+        "hc_per_gsf": 210,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 9.72,
+        "em": 1.486,
+        "net_profit": 5891094,
+        "total_cost": 32409813
+      },
+      "hc210_cap55": {
+        "hc_per_gsf": 210,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 4.28,
+        "em": 1.195,
+        "net_profit": 2366288,
+        "total_cost": 32409813
+      },
+      "hc210_cap60": {
+        "hc_per_gsf": 210,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -1.13,
+        "em": 0.953,
+        "net_profit": -571051,
+        "total_cost": 32409813
+      },
+      "hc225_cap45": {
+        "hc_per_gsf": 225,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 12.22,
+        "em": 1.635,
+        "net_profit": 8167289,
+        "total_cost": 34073941
+      },
+      "hc225_cap50": {
+        "hc_per_gsf": 225,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 6.36,
+        "em": 1.3,
+        "net_profit": 3859193,
+        "total_cost": 34073941
+      },
+      "hc225_cap55": {
+        "hc_per_gsf": 225,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 0.61,
+        "em": 1.026,
+        "net_profit": 334387,
+        "total_cost": 34073941
+      },
+      "hc225_cap60": {
+        "hc_per_gsf": 225,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -5.2,
+        "em": 0.797,
+        "net_profit": -2602952,
+        "total_cost": 34073941
+      },
+      "hc250_cap45": {
+        "hc_per_gsf": 250,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 7.12,
+        "em": 1.335,
+        "net_profit": 4780787,
+        "total_cost": 36847489
+      },
+      "hc250_cap50": {
+        "hc_per_gsf": 250,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 0.78,
+        "em": 1.033,
+        "net_profit": 472691,
+        "total_cost": 36847489
+      },
+      "hc250_cap55": {
+        "hc_per_gsf": 250,
+        "exit_cap_pct": 5.5,
+        "irr_pct": -5.61,
+        "em": 0.786,
+        "net_profit": -3052115,
+        "total_cost": 36847489
+      },
+      "hc250_cap60": {
+        "hc_per_gsf": 250,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -12.29,
+        "em": 0.58,
+        "net_profit": -5989453,
+        "total_cost": 36847489
+      }
+    },
+    "rent_uplift_vs_exit_cap_250gsf": {
+      "rent100_cap45": {
+        "rent_multiplier": 1.0,
+        "rent_per_nsf": 3.2694,
+        "exit_cap_pct": 4.5,
+        "irr_pct": -1.09,
+        "em": 0.956,
+        "net_profit": -647710
+      },
+      "rent100_cap50": {
+        "rent_multiplier": 1.0,
+        "rent_per_nsf": 3.2694,
+        "exit_cap_pct": 5.0,
+        "irr_pct": -8.49,
+        "em": 0.697,
+        "net_profit": -4488216
+      },
+      "rent100_cap55": {
+        "rent_multiplier": 1.0,
+        "rent_per_nsf": 3.2694,
+        "exit_cap_pct": 5.5,
+        "irr_pct": -16.43,
+        "em": 0.485,
+        "net_profit": -7630448
+      },
+      "rent100_cap60": {
+        "rent_multiplier": 1.0,
+        "rent_per_nsf": 3.2694,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -25.59,
+        "em": 0.308,
+        "net_profit": -10248975
+      },
+      "rent110_cap45": {
+        "rent_multiplier": 1.1,
+        "rent_per_nsf": 3.5963,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 7.12,
+        "em": 1.335,
+        "net_profit": 4780787
+      },
+      "rent110_cap50": {
+        "rent_multiplier": 1.1,
+        "rent_per_nsf": 3.5963,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 0.78,
+        "em": 1.033,
+        "net_profit": 472691
+      },
+      "rent110_cap55": {
+        "rent_multiplier": 1.1,
+        "rent_per_nsf": 3.5963,
+        "exit_cap_pct": 5.5,
+        "irr_pct": -5.61,
+        "em": 0.786,
+        "net_profit": -3052115
+      },
+      "rent110_cap60": {
+        "rent_multiplier": 1.1,
+        "rent_per_nsf": 3.5963,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -12.29,
+        "em": 0.58,
+        "net_profit": -5989453
+      },
+      "rent114_cap45": {
+        "rent_multiplier": 1.15,
+        "rent_per_nsf": 3.7598,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 10.61,
+        "em": 1.535,
+        "net_profit": 7495144
+      },
+      "rent114_cap50": {
+        "rent_multiplier": 1.15,
+        "rent_per_nsf": 3.7598,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 4.62,
+        "em": 1.211,
+        "net_profit": 2953242
+      },
+      "rent114_cap55": {
+        "rent_multiplier": 1.15,
+        "rent_per_nsf": 3.7598,
+        "exit_cap_pct": 5.5,
+        "irr_pct": -1.32,
+        "em": 0.946,
+        "net_profit": -762860
+      },
+      "rent114_cap60": {
+        "rent_multiplier": 1.15,
+        "rent_per_nsf": 3.7598,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -7.37,
+        "em": 0.724,
+        "net_profit": -3859611
+      },
+      "rent120_cap45": {
+        "rent_multiplier": 1.2,
+        "rent_per_nsf": 3.9233,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 13.82,
+        "em": 1.74,
+        "net_profit": 10209561
+      },
+      "rent120_cap50": {
+        "rent_multiplier": 1.2,
+        "rent_per_nsf": 3.9233,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 8.09,
+        "em": 1.394,
+        "net_profit": 5433847
+      },
+      "rent120_cap55": {
+        "rent_multiplier": 1.2,
+        "rent_per_nsf": 3.9233,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 2.49,
+        "em": 1.111,
+        "net_profit": 1526444
+      },
+      "rent120_cap60": {
+        "rent_multiplier": 1.2,
+        "rent_per_nsf": 3.9233,
+        "exit_cap_pct": 6.0,
+        "irr_pct": -3.1,
+        "em": 0.875,
+        "net_profit": -1729724
+      },
+      "rent125_cap45": {
+        "rent_multiplier": 1.25,
+        "rent_per_nsf": 4.0868,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 16.78,
+        "em": 1.942,
+        "net_profit": 12924031
+      },
+      "rent125_cap50": {
+        "rent_multiplier": 1.25,
+        "rent_per_nsf": 4.0868,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 11.26,
+        "em": 1.577,
+        "net_profit": 7914500
+      },
+      "rent125_cap55": {
+        "rent_multiplier": 1.25,
+        "rent_per_nsf": 4.0868,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 5.93,
+        "em": 1.278,
+        "net_profit": 3815793
+      },
+      "rent125_cap60": {
+        "rent_multiplier": 1.25,
+        "rent_per_nsf": 4.0868,
+        "exit_cap_pct": 6.0,
+        "irr_pct": 0.68,
+        "em": 1.029,
+        "net_profit": 400203
+      },
+      "rent130_cap45": {
+        "rent_multiplier": 1.3,
+        "rent_per_nsf": 4.2502,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 19.54,
+        "em": 2.145,
+        "net_profit": 15638550
+      },
+      "rent130_cap50": {
+        "rent_multiplier": 1.3,
+        "rent_per_nsf": 4.2502,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 14.19,
+        "em": 1.761,
+        "net_profit": 10395196
+      },
+      "rent130_cap55": {
+        "rent_multiplier": 1.3,
+        "rent_per_nsf": 4.2502,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 9.08,
+        "em": 1.447,
+        "net_profit": 6105180
+      },
+      "rent130_cap60": {
+        "rent_multiplier": 1.3,
+        "rent_per_nsf": 4.2502,
+        "exit_cap_pct": 6.0,
+        "irr_pct": 4.09,
+        "em": 1.185,
+        "net_profit": 2530167
+      },
+      "rent135_cap45": {
+        "rent_multiplier": 1.35,
+        "rent_per_nsf": 4.4137,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 22.12,
+        "em": 2.351,
+        "net_profit": 18353111
+      },
+      "rent135_cap50": {
+        "rent_multiplier": 1.35,
+        "rent_per_nsf": 4.4137,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 16.92,
+        "em": 1.948,
+        "net_profit": 12875931
+      },
+      "rent135_cap55": {
+        "rent_multiplier": 1.35,
+        "rent_per_nsf": 4.4137,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 11.98,
+        "em": 1.618,
+        "net_profit": 8394603
+      },
+      "rent135_cap60": {
+        "rent_multiplier": 1.35,
+        "rent_per_nsf": 4.4137,
+        "exit_cap_pct": 6.0,
+        "irr_pct": 7.21,
+        "em": 1.343,
+        "net_profit": 4660162
+      },
+      "rent140_cap45": {
+        "rent_multiplier": 1.4,
+        "rent_per_nsf": 4.5772,
+        "exit_cap_pct": 4.5,
+        "irr_pct": 24.56,
+        "em": 2.558,
+        "net_profit": 21067710
+      },
+      "rent140_cap50": {
+        "rent_multiplier": 1.4,
+        "rent_per_nsf": 4.5772,
+        "exit_cap_pct": 5.0,
+        "irr_pct": 19.48,
+        "em": 2.136,
+        "net_profit": 15356701
+      },
+      "rent140_cap55": {
+        "rent_multiplier": 1.4,
+        "rent_per_nsf": 4.5772,
+        "exit_cap_pct": 5.5,
+        "irr_pct": 14.68,
+        "em": 1.79,
+        "net_profit": 10684057
+      },
+      "rent140_cap60": {
+        "rent_multiplier": 1.4,
+        "rent_per_nsf": 4.5772,
+        "exit_cap_pct": 6.0,
+        "irr_pct": 10.09,
+        "em": 1.502,
+        "net_profit": 6790187
+      }
+    },
+    "density_units_vs_hard_cost": {
+      "units66_hc184": {
+        "units": 66,
+        "hc_per_gsf": 184,
+        "irr_pct": 17.55,
+        "em": 1.991,
+        "net_profit": 10440903,
+        "total_cost": 28504658
+      },
+      "units66_hc210": {
+        "units": 66,
+        "hc_per_gsf": 210,
+        "irr_pct": 11.8,
+        "em": 1.609,
+        "net_profit": 7095040,
+        "total_cost": 31244923
+      },
+      "units66_hc225": {
+        "units": 66,
+        "hc_per_gsf": 225,
+        "irr_pct": 8.56,
+        "em": 1.42,
+        "net_profit": 5164734,
+        "total_cost": 32825845
+      },
+      "units66_hc250": {
+        "units": 66,
+        "hc_per_gsf": 250,
+        "irr_pct": 3.23,
+        "em": 1.144,
+        "net_profit": 1947557,
+        "total_cost": 35460715
+      },
+      "units75_hc184": {
+        "units": 75,
+        "hc_per_gsf": 184,
+        "irr_pct": 20.97,
+        "em": 2.25,
+        "net_profit": 14283322,
+        "total_cost": 31149109
+      },
+      "units75_hc210": {
+        "units": 75,
+        "hc_per_gsf": 210,
+        "irr_pct": 15.17,
+        "em": 1.826,
+        "net_profit": 10481205,
+        "total_cost": 34263047
+      },
+      "units75_hc225": {
+        "units": 75,
+        "hc_per_gsf": 225,
+        "irr_pct": 11.93,
+        "em": 1.618,
+        "net_profit": 8287675,
+        "total_cost": 36059549
+      },
+      "units75_hc250": {
+        "units": 75,
+        "hc_per_gsf": 250,
+        "irr_pct": 6.64,
+        "em": 1.316,
+        "net_profit": 4631793,
+        "total_cost": 39053720
+      },
+      "units86_hc184": {
+        "units": 86,
+        "hc_per_gsf": 184,
+        "irr_pct": 24.18,
+        "em": 2.516,
+        "net_profit": 18981436,
+        "total_cost": 34381217
+      },
+      "units86_hc210": {
+        "units": 86,
+        "hc_per_gsf": 210,
+        "irr_pct": 18.3,
+        "em": 2.047,
+        "net_profit": 14621674,
+        "total_cost": 37951865
+      },
+      "units86_hc225": {
+        "units": 86,
+        "hc_per_gsf": 225,
+        "irr_pct": 15.05,
+        "em": 1.818,
+        "net_profit": 12106427,
+        "total_cost": 40011854
+      },
+      "units86_hc250": {
+        "units": 86,
+        "hc_per_gsf": 250,
+        "irr_pct": 9.77,
+        "em": 1.489,
+        "net_profit": 7914349,
+        "total_cost": 43445170
+      },
+      "units100_hc184": {
+        "units": 100,
+        "hc_per_gsf": 184,
+        "irr_pct": 27.25,
+        "em": 2.795,
+        "net_profit": 24962809,
+        "total_cost": 38494808
+      },
+      "units100_hc210": {
+        "units": 100,
+        "hc_per_gsf": 210,
+        "irr_pct": 21.28,
+        "em": 2.276,
+        "net_profit": 19893319,
+        "total_cost": 42646725
+      },
+      "units100_hc225": {
+        "units": 100,
+        "hc_per_gsf": 225,
+        "irr_pct": 17.99,
+        "em": 2.025,
+        "net_profit": 16968613,
+        "total_cost": 45042061
+      },
+      "units100_hc250": {
+        "units": 100,
+        "hc_per_gsf": 250,
+        "irr_pct": 12.69,
+        "em": 1.665,
+        "net_profit": 12094103,
+        "total_cost": 49034289
+      }
+    }
+  },
+  "finding_summary": {
+    "current_xlsx_irr_pct": 8.64,
+    "current_xlsx_em": 1.66,
+    "updated_scenario_B_irr_pct": -5.61,
+    "updated_scenario_B_em": 0.786,
+    "target_scenario_F_irr_pct": 26.98,
+    "target_scenario_F_em": 2.763,
+    "deal_verdict_at_250psf": "DOES NOT PENCIL at $250/GSF with current land cost and unit count. Hard costs must be reduced to sub-$200/GSF OR units increased to 80+ to approach target returns.",
+    "minimum_hard_cost_for_positive_irr_at_5pct_cap": "~$215/GSF (with +10% rents, 8.5% debt, 65% LTC)",
+    "minimum_rent_uplift_for_15pct_irr_at_250gsf": "~35-40% rent increase required (unrealistic near-term)",
+    "recommended_path": "D (value-engineering to $210/GSF) or F (renegotiate land + $190/GSF + 20% rents + 4.75% cap)"
+  }
+}

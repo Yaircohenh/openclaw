@@ -1,0 +1,15 @@
+{
+  "agents": {
+    "list": [
+      {
+        "id": "main",
+        "default": true
+      },
+      {
+        "id": "ninja",
+        "workspace": "workspace/ninja",
+        "defaultModel": "anthropic/claude-sonnet-4-6"
+      }
+    ]
+  }
+}

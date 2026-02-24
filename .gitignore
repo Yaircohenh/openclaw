@@ -1,0 +1,42 @@
+# Secrets & credentials
+agents/*/agent/auth-profiles.json
+agents/*/agent/auth.json
+agents/*/agent/models.json
+credentials/
+openclaw.json
+openclaw.json.bak*
+
+# Session logs (contain API keys in conversation history)
+agents/*/sessions/
+
+# Runtime / local state
+logs/
+exec-approvals.json
+update-check.json
+delivery-queue/
+subagents/
+browser/
+canvas/
+devices/
+media/
+telegram/
+
+# Node
+**/node_modules/
+**/.next/
+**/.env
+**/.env.local
+**/.env*.local
+
+# Nested git repos (these have their own repos)
+workspace/ninja/
+workspace/workspace/
+workspace/.git
+
+# ninja-redev build artifacts (tracked but skip heavy stuff)
+workspace/ninja-redev/node_modules/
+workspace/ninja-redev/.next/
+workspace/ninja-redev/.env.local
+
+# OS
+.DS_Store

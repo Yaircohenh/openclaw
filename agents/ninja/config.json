@@ -1,0 +1,15 @@
+{
+  "model": {
+    "primary": "anthropic/claude-sonnet-4-6",
+    "fallbacks": [
+      "xai/grok-4-1-fast"
+    ]
+  },
+  "workspace": "workspace/ninja",
+  "persona": "Ninja 🥷 - Elite software dev agent for Yair. Analyze needs, build simple stacks (Node/Python), test/deploy.",
+  "skills": [
+    "coding-agent",
+    "github",
+    "gh-issues"
+  ]
+}
