@@ -1,0 +1,44 @@
+{
+  "name": "Ninja - Claude Code Sandbox",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "NODE_VERSION": "22"
+    }
+  },
+  "runArgs": [
+    "--env-file", ".devcontainer/.env"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+  "remoteUser": "node",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=ninja-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=ninja-claude-config-${devcontainerId},target=/home/node/.claude,type=volume"
+  ],
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "containerEnv": {
+    "DEVCONTAINER": "true"
+  },
+  "postCreateCommand": "cd /workspace/workspace/ninja-redev && npm install",
+  "postAttachCommand": "echo '\\n🥷 Ninja Dev Container ready. Run: cc\\n'"
+}
