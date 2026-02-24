@@ -143,5 +143,29 @@
     { "agent": "ninja", "action": "shell.node_*" },
     { "agent": "ninja", "action": "shell.python3_*" },
     { "agent": "ninja", "action": "shell.git_commit" }
-  ]
+  ],
+
+  "rateLimits": {
+    "global": {
+      "requestsPerMinute": 30,
+      "tokensPerHour": 500000
+    },
+    "perAgent": {
+      "default": { "requestsPerMinute": 10, "tokensPerHour": 100000 },
+      "main": { "requestsPerMinute": 15, "tokensPerHour": 200000 },
+      "ninja": { "requestsPerMinute": 15, "tokensPerHour": 150000 }
+    }
+  },
+
+  "inputValidation": {
+    "maxMessageLength": 10000,
+    "maxFileUploadMb": 50,
+    "stripHtml": true,
+    "denyPatterns": [
+      "(?i)ignore previous instructions",
+      "(?i)system prompt",
+      "(?i)you are now",
+      "(?i)disregard all"
+    ]
+  }
 }

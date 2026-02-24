@@ -1,0 +1,30 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "18789:18789"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - clawos-state:/home/clawos/.openclaw
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "openclaw", "health"]
+      interval: 30s
+      timeout: 10s
+
+  dashboard:
+    build:
+      context: ./apps/dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    depends_on:
+      gateway:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  clawos-state:

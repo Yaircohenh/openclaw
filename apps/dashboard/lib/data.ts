@@ -123,3 +123,61 @@ export function getSystemStatus() {
     version: run("openclaw --version 2>&1") || "unknown",
   };
 }
+
+export interface CostSummary {
+  totalCost: number;
+  totalTokens: number;
+  raw: string;
+}
+
+export function getCostSummary(): CostSummary {
+  const raw = run("openclaw gateway usage-cost 2>&1");
+  const costMatch = raw.match(/\$([\d.]+)/);
+  const tokenMatch = raw.match(/([\d,]+)\s*tokens/);
+  return {
+    totalCost: costMatch ? parseFloat(costMatch[1]) : 0,
+    totalTokens: tokenMatch ? parseInt(tokenMatch[1].replace(/,/g, "")) : 0,
+    raw,
+  };
+}
+
+export interface DoctorCheck {
+  level: "critical" | "warn" | "info" | "ok";
+  id: string;
+  message: string;
+}
+
+export interface HealthStatus {
+  gatewayHealthy: boolean;
+  checks: DoctorCheck[];
+  disk: string;
+  memory: string;
+}
+
+export function getHealthStatus(): HealthStatus {
+  const doctorRaw = run("openclaw doctor 2>&1");
+  const healthRaw = run("openclaw gateway health 2>&1");
+  const disk = run("df -h / 2>&1 | tail -1");
+  const mem = run("free -m 2>&1 | grep Mem");
+
+  const checks: DoctorCheck[] = [];
+  const lines = doctorRaw.split("\n");
+  for (const line of lines) {
+    if (line.includes("CRITICAL") || line.includes("critical")) {
+      checks.push({ level: "critical", id: "doctor", message: line.trim() });
+    } else if (line.includes("WARN") || line.includes("warn")) {
+      checks.push({ level: "warn", id: "doctor", message: line.trim() });
+    }
+  }
+
+  if (checks.length === 0) {
+    checks.push({ level: "ok", id: "doctor", message: "All checks passed" });
+  }
+
+  return {
+    gatewayHealthy: healthRaw.includes("OK"),
+    checks,
+    disk: disk || "unavailable",
+    memory: mem || "unavailable",
+  };
+}

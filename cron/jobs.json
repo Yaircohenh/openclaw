@@ -24,6 +24,22 @@
       "agent": "accounting",
       "task": "Generate a weekly expense summary from the invoice-manager service. Include: total spent, by category, overdue invoices, and any anomalies. Report to the orchestrator for Yair.",
       "enabled": false
+    },
+    {
+      "id": "gateway-health-probe",
+      "name": "Gateway Health Probe",
+      "schedule": "*/15 * * * *",
+      "agent": "ops",
+      "task": "Run openclaw health and openclaw doctor. Check disk space with df -h and memory with free -m. If any CRITICAL issues are found, write them to memory with timestamp and severity. Only report if issues are found — skip if all healthy.",
+      "enabled": true
+    },
+    {
+      "id": "daily-cost-snapshot",
+      "name": "Daily Cost Snapshot",
+      "schedule": "0 23 * * *",
+      "agent": "accounting",
+      "task": "Run openclaw gateway usage-cost and save the output to memory under a Daily Cost Snapshot heading. Include total cost, token count, and per-agent breakdown if available. Compare with yesterday's snapshot and flag any unusual spikes (>2x increase). If daily cost exceeds $5 flag as warning, if >$20 flag as critical.",
+      "enabled": true
     }
   ]
 }

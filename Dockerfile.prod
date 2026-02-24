@@ -1,0 +1,28 @@
+ARG NODE_VERSION=22
+FROM node:${NODE_VERSION}-slim AS base
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git jq ca-certificates curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g openclaw@2026.2.23
+
+RUN useradd -m -s /bin/bash clawos || true
+USER clawos
+WORKDIR /home/clawos
+
+# Copy ClawOS configuration
+COPY --chown=clawos:clawos config.json .
+COPY --chown=clawos:clawos agents/ agents/
+COPY --chown=clawos:clawos skills/ skills/
+COPY --chown=clawos:clawos cron/ cron/
+COPY --chown=clawos:clawos workspace/IDENTITY.md workspace/SOUL.md workspace/USER.md \
+     workspace/AGENTS.md workspace/TOOLS.md workspace/MEMORY.md \
+     workspace/HEARTBEAT.md workspace/security-policy.json workspace/
+
+HEALTHCHECK --interval=30s --timeout=10s \
+  CMD openclaw health || exit 1
+
+EXPOSE 18789
+
+ENTRYPOINT ["openclaw", "gateway", "run"]

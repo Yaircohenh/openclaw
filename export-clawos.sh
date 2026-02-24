@@ -6,9 +6,19 @@ DATE=$(date +%Y-%m-%d)
 EXPORT_DIR="/tmp/clawos-export-${DATE}"
 TARBALL="/workspace/clawos-config-${DATE}.tar.gz"
 
-echo "=== ClawOS Export Script ==="
+CLAWOS_VERSION="1.0.0"
+
+echo "=== ClawOS Export Script v${CLAWOS_VERSION} ==="
 echo "Packaging configuration for external installation..."
 echo ""
+
+# Pre-export validation
+echo "Running config validation..."
+if command -v node >/dev/null 2>&1 && [ -f /workspace/tests/configs.test.mjs ]; then
+  node --test /workspace/tests/configs.test.mjs 2>&1 || { echo "ERROR: Config validation failed. Fix issues before exporting."; exit 1; }
+  echo "Validation passed."
+  echo ""
+fi
 
 # Clean previous export
 rm -rf "$EXPORT_DIR"
@@ -40,9 +50,33 @@ if [ -f "/workspace/workspace/security-policy.json" ]; then
 fi
 
 # 6. Shell completions
-cp -r /workspace/completions "$EXPORT_DIR/"
+cp -r /workspace/completions "$EXPORT_DIR/" 2>/dev/null || true
 
-# 7. INSTALL instructions
+# 7. Documentation
+if [ -d /workspace/docs ]; then
+  cp -r /workspace/docs "$EXPORT_DIR/"
+fi
+
+# 8. Tests
+if [ -d /workspace/tests ]; then
+  cp -r /workspace/tests "$EXPORT_DIR/"
+fi
+
+# 9. Deployment files
+[ -f /workspace/Dockerfile.prod ] && cp /workspace/Dockerfile.prod "$EXPORT_DIR/"
+[ -f /workspace/docker-compose.prod.yml ] && cp /workspace/docker-compose.prod.yml "$EXPORT_DIR/"
+[ -f /workspace/package.json ] && cp /workspace/package.json "$EXPORT_DIR/"
+[ -f /workspace/install-clawos.sh ] && cp /workspace/install-clawos.sh "$EXPORT_DIR/"
+
+# 10. CI/CD
+if [ -d /workspace/.github ]; then
+  cp -r /workspace/.github "$EXPORT_DIR/"
+fi
+
+# 11. Version stamp
+echo "$CLAWOS_VERSION" > "$EXPORT_DIR/VERSION"
+
+# 12. INSTALL instructions
 cat > "$EXPORT_DIR/INSTALL.md" << 'INSTALL_EOF'
 # ClawOS Installation Guide
 
