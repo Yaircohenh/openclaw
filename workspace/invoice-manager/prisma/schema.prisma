@@ -1,0 +1,242 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  color       String    @default("#6366f1")
+  description String?
+  isDefault   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  invoices    Invoice[]
+}
+
+model Vendor {
+  id              String    @id @default(cuid())
+  name            String    @unique
+  email           String?
+  phone           String?
+  address         String?
+  defaultCategory String?
+  totalSpend      Float     @default(0)
+  invoiceCount    Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  invoices        Invoice[]
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  name        String
+  client      String?
+  budget      Float?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      String    @default("active")
+  description String?
+  color       String    @default("#6366f1")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  invoices    Invoice[]
+  totalSpend  Float     @default(0)
+}
+
+model Invoice {
+  id              String   @id @default(cuid())
+  invoiceNumber   String?
+  vendorId        String?
+  vendor          Vendor?  @relation(fields: [vendorId], references: [id])
+  vendorName      String?
+  projectId       String?
+  project         Project? @relation(fields: [projectId], references: [id])
+  categoryId      String?
+  category        Category? @relation(fields: [categoryId], references: [id])
+  categoryName    String?
+
+  invoiceDate     DateTime?
+  dueDate         DateTime?
+  paidDate        DateTime?
+  paymentMethod   String?
+
+  amount          Float    @default(0)
+  currency        String   @default("USD")
+  tax             Float?
+  discount        Float?
+  totalAmount     Float    @default(0)
+
+  status          String   @default("unpaid")
+  description     String?
+  notes           String?
+
+  source          String   @default("manual")
+  emailId         String?
+  emailFrom       String?
+  emailSubject    String?
+  emailDate       DateTime?
+
+  filePath        String?
+  fileName        String?
+  fileType        String?
+
+  extractionConfidence Float?
+  rawExtractedText     String?
+
+  googleDriveId   String?
+  googleDriveUrl  String?
+
+  isDuplicate     Boolean  @default(false)
+  duplicateOfId   String?
+  isRecurring     Boolean  @default(false)
+  recurringGroupId String?
+
+  processingStatus String  @default("processed")
+  processingError  String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  lineItems       LineItem[]
+  receipts        Receipt[]
+  reconciliations Reconciliation[]
+  auditLogs       AuditLog[]
+}
+
+model LineItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  description String
+  quantity    Float    @default(1)
+  unitPrice   Float    @default(0)
+  amount      Float    @default(0)
+  tax         Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Receipt {
+  id          String   @id @default(cuid())
+  invoiceId   String?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+
+  fileName    String
+  filePath    String
+  fileType    String
+  fileSize    Int?
+
+  uploadedAt  DateTime @default(now())
+
+  matchScore     Float?
+  isManualMatch  Boolean @default(false)
+
+  googleDriveId  String?
+  googleDriveUrl String?
+
+  extractedAmount Float?
+  extractedDate   DateTime?
+  extractedVendor String?
+
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BankTransaction {
+  id              String   @id @default(cuid())
+
+  transactionDate DateTime
+  description     String
+  amount          Float
+  balance         Float?
+  currency        String   @default("USD")
+  reference       String?
+  category        String?
+
+  source          String
+  bankName        String?
+  accountNumber   String?
+  statementId     String?
+  statement       BankStatement? @relation(fields: [statementId], references: [id])
+
+  reconciliations Reconciliation[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model BankStatement {
+  id            String            @id @default(cuid())
+  fileName      String
+  filePath      String
+  bankName      String?
+  accountNumber String?
+  startDate     DateTime?
+  endDate       DateTime?
+  uploadedAt    DateTime          @default(now())
+  transactions  BankTransaction[]
+}
+
+model Reconciliation {
+  id                String           @id @default(cuid())
+  invoiceId         String?
+  invoice           Invoice?         @relation(fields: [invoiceId], references: [id])
+  bankTransactionId String?
+  bankTransaction   BankTransaction? @relation(fields: [bankTransactionId], references: [id])
+
+  status            String           @default("matched")
+  matchScore        Float?
+  notes             String?
+
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  invoiceId String?
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
+
+  action    String
+  field     String?
+  oldValue  String?
+  newValue  String?
+
+  userId    String?
+  userEmail String?
+
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  group     String   @default("general")
+  updatedAt DateTime @updatedAt
+}
+
+model EmailQueue {
+  id          String   @id @default(cuid())
+  messageId   String   @unique
+  from        String?
+  subject     String?
+  receivedAt  DateTime?
+
+  status      String   @default("pending")
+  error       String?
+
+  attachments Int      @default(0)
+  processedAt DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
