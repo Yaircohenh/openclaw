@@ -154,6 +154,219 @@ export interface HealthStatus {
   memory: string;
 }
 
+// --- Sessions ---
+
+export interface Session {
+  agentId: string;
+  sessionId: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  totalTokens: number;
+  updatedAt: number;
+  kind: string;
+}
+
+export function getSessions(): Session[] {
+  const raw = run("openclaw sessions --json --all-agents 2>&1");
+  try {
+    const data = JSON.parse(raw);
+    return (data.sessions || []).map((s: any) => ({
+      agentId: s.agentId || "unknown",
+      sessionId: s.sessionId || s.key || "",
+      model: s.model || "default",
+      inputTokens: s.inputTokens || 0,
+      outputTokens: s.outputTokens || 0,
+      totalTokens: s.totalTokens || 0,
+      updatedAt: s.updatedAt || 0,
+      kind: s.kind || "direct",
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// --- Skills ---
+
+export interface Skill {
+  name: string;
+  description: string;
+  emoji: string;
+  eligible: boolean;
+  disabled: boolean;
+  source: string;
+  bundled: boolean;
+  missing: {
+    bins: string[];
+    anyBins: string[];
+    env: string[];
+    config: string[];
+    os: string[];
+  };
+}
+
+export function getSkills(): Skill[] {
+  const raw = run("openclaw skills list --json 2>&1");
+  try {
+    const data = JSON.parse(raw);
+    return (data.skills || []).map((s: any) => ({
+      name: s.name || "",
+      description: s.description || "",
+      emoji: s.emoji || "",
+      eligible: s.eligible ?? false,
+      disabled: s.disabled ?? false,
+      source: s.source || "",
+      bundled: s.bundled ?? false,
+      missing: {
+        bins: s.missing?.bins || [],
+        anyBins: s.missing?.anyBins || [],
+        env: s.missing?.env || [],
+        config: s.missing?.config || [],
+        os: s.missing?.os || [],
+      },
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// --- Plugins ---
+
+export interface Plugin {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  status: "loaded" | "disabled" | "error";
+  origin: string;
+  toolNames: string[];
+  error?: string;
+}
+
+export function getPlugins(): Plugin[] {
+  const raw = run("openclaw plugins list --json 2>&1");
+  try {
+    // JSON may be preceded by stderr lines — find the first `{`
+    const jsonStart = raw.indexOf("{");
+    if (jsonStart === -1) return [];
+    const data = JSON.parse(raw.slice(jsonStart));
+    return (data.plugins || []).map((p: any) => ({
+      id: p.id || "",
+      name: p.name || p.id || "",
+      description: p.description || "",
+      version: p.version || "",
+      status: p.status || "disabled",
+      origin: p.origin || "",
+      toolNames: p.toolNames || [],
+      error: p.error,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// --- Cron Jobs ---
+
+export interface CronJob {
+  id: string;
+  name: string;
+  schedule: string;
+  agent: string;
+  task: string;
+  enabled: boolean;
+  lastRun?: string;
+  nextRun?: string;
+}
+
+export function getCronJobs(): CronJob[] {
+  // Try gateway first, fall back to local jobs.json
+  const raw = run("openclaw cron list --all --json 2>&1");
+  try {
+    const data = JSON.parse(raw);
+    if (Array.isArray(data.jobs) && data.jobs.length > 0) {
+      return data.jobs.map((j: any) => ({
+        id: j.id || "",
+        name: j.name || j.id || "",
+        schedule: j.cron || j.schedule || "",
+        agent: j.agent || j.agentId || "",
+        task: j.message || j.task || "",
+        enabled: j.enabled ?? !j.disabled,
+        lastRun: j.lastRun || j.lastRunAt,
+        nextRun: j.nextRun || j.nextRunAt,
+      }));
+    }
+  } catch {
+    // fall through
+  }
+  // Fallback: read local jobs.json
+  try {
+    const local = run("cat /workspace/cron/jobs.json");
+    const data = JSON.parse(local);
+    return (data.jobs || []).map((j: any) => ({
+      id: j.id || "",
+      name: j.name || j.id || "",
+      schedule: j.schedule || "",
+      agent: j.agent || "",
+      task: j.task || "",
+      enabled: j.enabled ?? true,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export interface CronRun {
+  jobId: string;
+  status: string;
+  startedAt: string;
+  finishedAt?: string;
+  output?: string;
+}
+
+export function getCronRuns(jobId: string): CronRun[] {
+  const raw = run(`openclaw cron runs --id ${jobId} --json 2>&1`);
+  try {
+    const data = JSON.parse(raw);
+    return (data.runs || []).map((r: any) => ({
+      jobId: r.jobId || jobId,
+      status: r.status || "unknown",
+      startedAt: r.startedAt || "",
+      finishedAt: r.finishedAt,
+      output: r.output,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// --- ClawHub Discovery ---
+
+export interface HubSkill {
+  slug: string;
+  name: string;
+  summary: string;
+  version: string;
+  downloads: number;
+  author: string;
+}
+
+export function getHubSkills(limit: number = 20): HubSkill[] {
+  const raw = run(`clawhub explore --json --limit ${limit} 2>&1`);
+  try {
+    const data = JSON.parse(raw);
+    return (data.skills || data.results || []).map((s: any) => ({
+      slug: s.slug || s.name || "",
+      name: s.name || s.slug || "",
+      summary: s.summary || s.description || "",
+      version: s.version || "",
+      downloads: s.downloads || 0,
+      author: s.author || "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export function getHealthStatus(): HealthStatus {
   const doctorRaw = run("openclaw doctor 2>&1");
   const healthRaw = run("openclaw gateway health 2>&1");

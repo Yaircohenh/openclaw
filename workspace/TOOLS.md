@@ -104,6 +104,95 @@ Agents can interact with these running services via HTTP bridge skills:
 
 **Important:** The invoice-manager app is Yair's — agents interact with it via API only, never modify its code.
 
+## Planning & Execution Engine
+
+ClawOS has a built-in planning and execution engine powered by two plugins:
+
+### Lobster (Typed Workflows)
+- **Plugin:** `lobster` (enabled)
+- Typed workflow tool with resumable approvals
+- Define multi-step workflows that can pause for human approval and resume
+- Use for complex multi-agent tasks that need checkpoints
+
+### LLM Task (Structured Tasks)
+- **Plugin:** `llm-task` (enabled)
+- Generic JSON-only LLM tool for structured tasks callable from workflows
+- Use for tasks that need structured input/output within a workflow
+
+### Cron Jobs
+
+Manage scheduled background jobs via the gateway:
+
+```bash
+# List all jobs
+openclaw cron list --all
+
+# Add a new job
+openclaw cron add --name "Job Name" --agent <id> --cron "<expr>" --message "<task>"
+
+# Disable/enable a job
+openclaw cron disable --id <job-id>
+openclaw cron enable --id <job-id>
+
+# View run history
+openclaw cron runs --id <job-id>
+```
+
+**Current jobs:**
+
+| Job | Agent | Schedule | Status |
+|-----|-------|----------|--------|
+| Daily Memory Review | main | `0 22 * * *` | enabled |
+| System Health Check | ops | `0 */6 * * *` | enabled |
+| Weekly Expense Summary | accounting | `0 9 * * 1` | disabled |
+| Gateway Health Probe | ops | `*/15 * * * *` | enabled |
+| Daily Cost Snapshot | accounting | `0 23 * * *` | enabled |
+
+## Skill Discovery & Installation
+
+ClawOS supports 51 bundled skills with automatic requirement detection, plus community skills from ClawHub.
+
+### Checking Skills
+
+```bash
+# List all skills with status
+openclaw skills list
+openclaw skills list --json
+
+# See what a skill needs
+openclaw skills info <name>
+```
+
+Skills auto-activate when their requirements are met (binaries, env vars, config, OS).
+
+### ClawHub — Community Skill Registry
+
+```bash
+# Browse available skills
+clawhub explore
+clawhub explore --json --limit 20
+
+# Install a skill from ClawHub
+clawhub install <slug>
+
+# Update installed skills
+clawhub update <slug>
+
+# Publish a custom skill
+clawhub publish <folder>
+```
+
+### Enabling Built-in Skills
+
+Most bundled skills need specific binaries or env vars. To enable one:
+1. Check what's missing: `openclaw skills list --json | jq '.skills[] | select(.name=="<name>")'`
+2. Install the required binary or set the env var
+3. The skill auto-activates on next gateway restart
+
+### Custom Skills
+
+Place custom skill folders in `~/.openclaw/skills/` with a `skill.json` manifest. See existing skills for the format.
+
 ## Deployment
 
 When Yair says "deploy", "put it online", "make it accessible", or "host it":
