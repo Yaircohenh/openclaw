@@ -1,23 +1,29 @@
-# CLAUDE.md - Ninja Dev Container
+# CLAUDE.md - ClawOS Platform
 
-## Environment
-- Running inside a Dev Container. You have full permissions.
-- Node.js 22, Python 3, Git, GitHub CLI available.
-- The Next.js app is at `workspace/ninja-redev/`.
+## What This Is
+ClawOS is a multi-agent AI orchestration platform built on OpenClaw. Tom is the master orchestrator; specialist agents (Ninja, Ops, CTO, Accounting, Finance, Legal, Marketing) handle domain tasks.
+
+## Structure
+- `agents/` — Agent configurations (config.json + prompts/system.md per agent)
+- `workspace/` — Orchestrator workspace (Tom's identity, tools, memory rules)
+- `skills/` — HTTP bridge skills (invoice-manager, financial-model, deploy, content-writer, re-om-extractor)
+- `cron/` — Scheduled jobs (health probes, memory review, cost snapshots)
+- `memory/` — Operational memory store
+- `docs/` — Security decisions and setup guides
+- `.devcontainer/` — Docker dev environment for Claude Code
 
 ## Development
-- `cd /workspace/workspace/ninja-redev && npm run dev` — start dev server (port 3000)
-- `npm run build` — verify production builds
-- `npm run lint` — ESLint checks
-- `ANTHROPIC_API_KEY` is set in the environment. The `/api/analyze` endpoint uses it.
+- Run Claude Code inside the dev container for autonomous development
+- Apps built by agents belong in their OWN GitHub repos, not here
+- This repo is infrastructure only
+- `ANTHROPIC_API_KEY` must be set in the environment
+
+## Key Commands
+- `openclaw gateway run` — start the gateway
+- `openclaw agents list` — show registered agents
+- `openclaw doctor` — health check
+- `node --test tests/configs.test.mjs` — validate configs
 
 ## Git
+- Main branch: `main`
 - Commit freely. Push when work is complete.
-- Main branch: `main`.
-
-## Key Files
-- `workspace/ninja-redev/app/page.tsx` — main page
-- `workspace/ninja-redev/app/api/analyze/route.ts` — Claude API endpoint
-- `workspace/ninja-redev/lib/model.ts` — financial model engine
-- `workspace/ninja-redev/lib/pdfParser.ts` — PDF extraction
-- `workspace/om_extractor.py` — Python PDF extraction script

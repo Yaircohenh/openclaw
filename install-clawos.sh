@@ -32,22 +32,28 @@ if [ -f config.json ]; then
   echo "Installed config.json"
 fi
 
-# Copy agent configs
+# Copy agent configs (merge into existing dir, don't nest)
 if [ -d agents ]; then
-  cp -r agents/ "$OPENCLAW_DIR/agents/"
+  mkdir -p "$OPENCLAW_DIR/agents"
+  for agent_dir in agents/*/; do
+    [ -d "$agent_dir" ] && cp -r "$agent_dir" "$OPENCLAW_DIR/agents/"
+  done
   echo "Installed agent configs"
 fi
 
-# Copy skills
+# Copy skills (merge into existing dir, don't nest)
 if [ -d skills ]; then
-  cp -r skills/ "$OPENCLAW_DIR/skills/"
+  mkdir -p "$OPENCLAW_DIR/skills"
+  for skill_dir in skills/*/; do
+    [ -d "$skill_dir" ] && cp -r "$skill_dir" "$OPENCLAW_DIR/skills/"
+  done
   echo "Installed skills"
 fi
 
 # Copy cron jobs
 if [ -d cron ]; then
   mkdir -p "$OPENCLAW_DIR/cron"
-  cp -r cron/ "$OPENCLAW_DIR/cron/"
+  cp cron/* "$OPENCLAW_DIR/cron/"
   echo "Installed cron jobs"
 fi
 
@@ -62,8 +68,25 @@ fi
 # Copy shell completions
 if [ -d completions ]; then
   mkdir -p "$OPENCLAW_DIR/completions"
-  cp -r completions/ "$OPENCLAW_DIR/completions/"
+  cp completions/* "$OPENCLAW_DIR/completions/"
   echo "Installed shell completions"
+fi
+
+# Merge agents list from config.json into openclaw.json
+if [ -f config.json ] && [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
+  if command -v node >/dev/null 2>&1; then
+    node -e "
+      const fs = require('fs');
+      const config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
+      const oc = JSON.parse(fs.readFileSync('$OPENCLAW_DIR/openclaw.json', 'utf-8'));
+      if (config.agents?.list) {
+        oc.agents = oc.agents || {};
+        oc.agents.list = config.agents.list;
+        fs.writeFileSync('$OPENCLAW_DIR/openclaw.json', JSON.stringify(oc, null, 2) + '\n');
+        console.log('Merged ' + config.agents.list.length + ' agents into openclaw.json');
+      }
+    " 2>&1 || echo "Warning: Could not merge agents list (non-fatal)"
+  fi
 fi
 
 echo ""

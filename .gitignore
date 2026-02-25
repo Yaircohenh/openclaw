@@ -6,7 +6,7 @@ credentials/
 openclaw.json
 openclaw.json.bak*
 
-# Session logs (contain API keys in conversation history)
+# Session logs
 agents/*/sessions/
 
 # Runtime / local state
@@ -24,30 +24,25 @@ telegram/
 # Node
 **/node_modules/
 **/.next/
+
+# Environment
 **/.env
 **/.env.local
 **/.env*.local
 
-# Nested git repos (these have their own repos)
+# Agent workspaces (openclaw runtime, have their own state)
 workspace/ninja/
-workspace/workspace/
-workspace/.git
-
-# ninja-redev build artifacts (tracked but skip heavy stuff)
-workspace/ninja-redev/node_modules/
-workspace/ninja-redev/.next/
-workspace/ninja-redev/.env.local
-
-# Build artifacts / exports
-*.tar.gz
-
-# Agent workspace repos (created by openclaw agents add, have their own .git)
 workspace/accounting/
 workspace/cto/
 workspace/finance/
 workspace/legal/
 workspace/marketing/
 workspace/ops/
+workspace/.openclaw/
+
+# Build artifacts
+*.tar.gz
+*.sqlite
 
 # OS
 .DS_Store
