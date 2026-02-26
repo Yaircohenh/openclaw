@@ -97,14 +97,10 @@ if pkill -f "openclaw gateway" 2>/dev/null; then
   ok "Stopped openclaw gateway process"
 fi
 
-# Kill anything on the gateway port
-if command -v lsof >/dev/null 2>&1; then
-  PORT_PID=$(lsof -ti :$GW_PORT 2>/dev/null || true)
-  if [ -n "$PORT_PID" ]; then
-    kill $PORT_PID 2>/dev/null || true
-    KILLED=1
-    ok "Freed port $GW_PORT"
-  fi
+# Stop any existing dashboard (only next start processes, not Docker)
+if pkill -f "next start" 2>/dev/null; then
+  KILLED=1
+  ok "Stopped dashboard process"
 fi
 
 if [ "$KILLED" -eq 1 ]; then
@@ -238,6 +234,14 @@ bash install-clawos.sh 2>&1 | while IFS= read -r line; do
 done
 ok "Config installed"
 
+# Set gateway mode (required since OpenClaw v2026.2.24+, belt-and-suspenders)
+openclaw config set gateway.mode local 2>/dev/null || true
+ok "Gateway mode set to local"
+
+# Unload the LaunchAgent that doctor installed (start.sh manages the gateway)
+launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
+ok "Disabled gateway LaunchAgent (start.sh manages it)"
+
 # ── Stage 10: Persist API keys ────────────────────────────────────
 step 10 "Persisting API keys"
 
@@ -325,24 +329,29 @@ fi
 
 echo -e "${BOLD}Starting ClawOS...${NC}\n"
 
-# Kill any existing processes
+# Stop any existing gateway (handles LaunchAgent + manual processes)
+openclaw gateway stop 2>/dev/null || true
 pkill -f "openclaw gateway" 2>/dev/null || true
-if command -v lsof >/dev/null 2>&1; then
-  lsof -ti :$GW_PORT 2>/dev/null | xargs kill 2>/dev/null || true
-  lsof -ti :$DASH_PORT 2>/dev/null | xargs kill 2>/dev/null || true
-fi
+pkill -f "next start" 2>/dev/null || true
 sleep 1
 
-# Start gateway
-openclaw gateway run --port $GW_PORT --bind loopback --auth token > "$INSTALL_DIR/gateway.log" 2>&1 &
+# Ensure gateway mode is set (required since OpenClaw v2026.2.24+)
+openclaw config set gateway.mode local 2>/dev/null || true
+
+# Unload LaunchAgent if present (we manage the gateway ourselves)
+launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
+
+# Start gateway directly
+openclaw gateway run --port $GW_PORT --bind loopback --auth token --allow-unconfigured > "$INSTALL_DIR/gateway.log" 2>&1 &
 GW_PID=$!
 echo "$GW_PID" > "$PID_FILE"
-sleep 2
+sleep 3
 
 if kill -0 $GW_PID 2>/dev/null; then
   echo -e "  ${GREEN}✔${NC} Gateway running on port $GW_PORT (PID $GW_PID)"
 else
   echo -e "  ${RED}✘${NC} Gateway failed to start — check gateway.log"
+  cat "$INSTALL_DIR/gateway.log" | tail -5
   exit 1
 fi
 
@@ -398,15 +407,13 @@ if [ -f "$PID_FILE" ]; then
   rm -f "$PID_FILE"
 fi
 
-# Also kill by process name (safety net)
+# Also kill by process name (safety net — only ClawOS processes, not Docker)
+openclaw gateway stop 2>/dev/null && STOPPED=1 || true
 pkill -f "openclaw gateway" 2>/dev/null && STOPPED=1 || true
 pkill -f "next start" 2>/dev/null && STOPPED=1 || true
 
-# Free ports
-if command -v lsof >/dev/null 2>&1; then
-  lsof -ti :$GW_PORT 2>/dev/null | xargs kill 2>/dev/null || true
-  lsof -ti :$DASH_PORT 2>/dev/null | xargs kill 2>/dev/null || true
-fi
+# Unload LaunchAgent if present
+launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
 
 if [ "$STOPPED" -eq 1 ]; then
   echo -e "  ${GREEN}✔${NC} ClawOS stopped"

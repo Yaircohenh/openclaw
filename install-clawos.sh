@@ -92,6 +92,20 @@ if [ ! -f "$OPENCLAW_DIR/openclaw.json" ]; then
   fi
 fi
 
+# Set gateway mode BEFORE any doctor calls that try to start the gateway
+openclaw config set gateway.mode local 2>/dev/null || {
+  # Fallback: inject directly into openclaw.json
+  node -e "
+    const fs = require('fs');
+    const p = '$OPENCLAW_DIR/openclaw.json';
+    const c = JSON.parse(fs.readFileSync(p, 'utf-8'));
+    c.gateway = c.gateway || {};
+    c.gateway.mode = 'local';
+    fs.writeFileSync(p, JSON.stringify(c, null, 2) + '\n');
+  " 2>/dev/null || true
+}
+echo "Set gateway.mode = local"
+
 # Merge agents list from config.json into openclaw.json
 if [ -f config.json ]; then
   if command -v node >/dev/null 2>&1; then
