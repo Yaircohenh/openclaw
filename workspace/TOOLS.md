@@ -22,7 +22,7 @@ Use this to decide which agent handles which request:
 
 | User Request Pattern | Delegate To | Example |
 |---------------------|-------------|---------|
-| "Build me...", "Create an app/tool/system..." | **Ops** 🏗️ via RALHP | "Build me a landing page" → see RALHP section below |
+| "Build me...", "Create an app/tool/system..." | **Ask user**: RALHP (Ops 🏗️) or Direct (Ninja 🥷) | "Build me a landing page" → see RALHP section below |
 | "Write code...", "Fix this bug...", "Add a function..." | **Ninja** 🥷 | "Fix the login bug" |
 | "Analyze this file", "Parse this PDF/Excel", "Extract data from..." | **Ninja** 🥷 | "Extract data from this OM" |
 | "Deploy...", "Put it online...", "Check server status...", "Set up CI..." | **Ops** ⚙️ | "Deploy the app to Vercel" |
@@ -204,15 +204,34 @@ When Yair says "deploy", "put it online", "make it accessible", or "host it":
 
 ## RALHP Build Loop
 
-> **⚠️ MANDATORY:** When a user says "build me", "create an app/tool/system", or any multi-step build request, you MUST delegate to **Ops 🏗️** (not Ninja directly). Ops runs the RALHP loop. Do NOT send build requests straight to Ninja — Ops plans, assigns, and QA's.
-
 **RALHP** = Reason, Act, Learn, Hypothesize, Plan — a structured multi-agent build workflow.
 
 ### What It Is
 A planning/QA layer for non-trivial builds: **Tom → Ops (architect/QA) → Ninja (dev)**. Ops creates a structured plan, assigns steps to Ninja, reviews deliverables, and reports back to Tom.
 
-### Workflow
-1. **User** tells Tom: "Build me X"
+### When to Offer RALHP
+
+When a user sends a build request, **ask before choosing the mode**. Present a short recommendation with a yes/no:
+
+**Recommend RALHP** (full planning + QA) for:
+- Multi-step builds (apps, tools, systems)
+- Features that need tests and QA review
+- Large refactors that touch many files
+
+**Recommend Direct** (straight to Ninja) for:
+- Small scripts, single-file tools
+- Bug fixes, quick patches
+- Simple features with clear scope
+
+**How to ask** — keep it brief, one message:
+> "This looks like a [small/medium/large] build. I'd recommend [RALHP / direct to Ninja] — [one-line reason]. RALHP or direct?"
+
+Then follow the user's choice:
+- **"RALHP"** → delegate to Ops 🏗️ (see workflow below)
+- **"Direct"** → delegate straight to Ninja 🥷
+
+### RALHP Workflow
+1. **User** tells Tom: "Build me X" → Tom asks RALHP or direct → User says RALHP
 2. **Tom** delegates to Ops with: what to build, constraints, context, output location
 3. **Ops** creates a plan (`workspace/ops/projects/<name>/plan.yml`), breaks it into steps
 4. **Ops** assigns steps to Ninja with acceptance criteria
@@ -220,17 +239,6 @@ A planning/QA layer for non-trivial builds: **Tom → Ops (architect/QA) → Nin
 6. **Ops** runs QA — PASS moves to next step, FAIL sends feedback
 7. **Ops** reports to Tom when the build is complete or blocked
 8. **Tom** relays the final result to Yair
-
-### When to Use RALHP
-
-| Request | Use RALHP? | Why |
-|---------|-----------|-----|
-| "Build me an app/tool/system" | **Yes** | Multi-step, needs planning |
-| "Create a new feature with tests" | **Yes** | Needs QA review |
-| "Fix this specific bug" | No | Single-step, direct delegation |
-| "Quick question / brainstorm" | No | No build involved |
-| "Deploy the app" | No | Single Ops task |
-| "Refactor the entire auth system" | **Yes** | Multi-step, needs oversight |
 
 ### How to Delegate to Ops for RALHP
 Include in your delegation message:
