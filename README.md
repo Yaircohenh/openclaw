@@ -212,25 +212,48 @@ ClawOS/
 
 ## Quick Start
 
+### Option A: One-Click (macOS)
+
+1. Download [`ClawOS-Installer.command`](https://raw.githubusercontent.com/Yaircohenh/openclaw/main/ClawOS-Installer.command)
+2. Double-click it (if macOS blocks it: right-click → Open)
+3. Wait for installation to complete
+4. Set your API key and start:
+
 ```bash
-# Clone
+export ANTHROPIC_API_KEY=sk-ant-...
+cd ~/Projects/clawos && bash start.sh
+```
+
+### Option B: One-Liner
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Yaircohenh/openclaw/main/setup-clawos.sh | bash
+```
+
+Then:
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+cd ~/Projects/clawos && bash start.sh
+```
+
+Dashboard at `http://localhost:3000` (password: `clawos`)
+
+### Option C: Manual
+
+```bash
 git clone https://github.com/Yaircohenh/openclaw.git clawos
 cd clawos
-
-# Install OpenClaw
 npm install -g openclaw
-
-# Set API key
 export ANTHROPIC_API_KEY=sk-ant-...
-
-# Start gateway
 openclaw gateway run --port 18789 --bind loopback --auth token
+```
 
-# Verify
-openclaw doctor
-openclaw agents list
+Verify: `openclaw doctor && openclaw agents list`
 
-# Run tests
+### Run Tests
+
+```bash
 node --test tests/configs.test.mjs
 ```
 
