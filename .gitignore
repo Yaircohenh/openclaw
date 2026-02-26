@@ -9,6 +9,9 @@ openclaw.json.bak*
 # Session logs
 agents/*/sessions/
 
+# Device identity (contains private keys)
+identity/device.json
+
 # Runtime / local state
 logs/
 exec-approvals.json
