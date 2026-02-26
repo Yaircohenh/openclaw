@@ -3,13 +3,11 @@
   "description": "ClawOS security policy — encodes rules from AGENTS.md and MEMORY.md",
   "lastUpdated": "2026-02-24",
   "updatedBy": "Yair",
-
   "approval": {
     "defaultPolicy": "require_approval",
     "autoApproveThreshold": 0.2,
     "defaultTtlMs": 3600000
   },
-
   "rules": [
     {
       "id": "email-send",
@@ -41,14 +39,17 @@
       "policy": "allow_with_logging",
       "reason": "Preview deployments are safe",
       "riskScore": 0.2,
-      "agents": ["ninja", "ops"]
+      "agents": [
+        "ninja",
+        "ops"
+      ]
     },
     {
       "id": "financial-action",
       "action": "finance.*",
       "policy": "require_approval",
       "reason": "Financial actions require explicit written approval — per MEMORY.md",
-      "riskScore": 1.0,
+      "riskScore": 1,
       "agents": "*"
     },
     {
@@ -81,7 +82,7 @@
       "policy": "allow",
       "reason": "Reading files within workspace is safe",
       "scope": "workspace/**",
-      "riskScore": 0.0,
+      "riskScore": 0,
       "agents": "*"
     },
     {
@@ -98,7 +99,7 @@
       "action": "web.search",
       "policy": "allow",
       "reason": "Web searches are read-only and safe",
-      "riskScore": 0.0,
+      "riskScore": 0,
       "agents": "*"
     },
     {
@@ -107,14 +108,18 @@
       "policy": "allow_with_logging",
       "reason": "Installing dependencies is routine but logged",
       "riskScore": 0.15,
-      "agents": ["ninja", "ops", "cto"]
+      "agents": [
+        "ninja",
+        "ops",
+        "cto"
+      ]
     },
     {
       "id": "calendar-check",
       "action": "calendar.*",
       "policy": "deny",
       "reason": "Calendar access not enabled — per HEARTBEAT.md restricted mode",
-      "riskScore": 1.0,
+      "riskScore": 1,
       "agents": "*"
     },
     {
@@ -122,41 +127,84 @@
       "action": "social.*",
       "policy": "deny",
       "reason": "Social media access not enabled — per HEARTBEAT.md restricted mode",
-      "riskScore": 1.0,
+      "riskScore": 1,
       "agents": "*"
     }
   ],
-
   "denylist": [
-    { "pattern": "rm -rf /*", "reason": "Destructive system command" },
-    { "pattern": "sudo *", "reason": "Privilege escalation" },
-    { "pattern": "email.send_without_draft", "reason": "Must show draft first — per MEMORY.md" },
-    { "pattern": "billing.*", "reason": "Financial/billing actions forbidden without explicit written approval — per MEMORY.md" }
+    {
+      "pattern": "rm -rf /*",
+      "reason": "Destructive system command"
+    },
+    {
+      "pattern": "sudo *",
+      "reason": "Privilege escalation"
+    },
+    {
+      "pattern": "email.send_without_draft",
+      "reason": "Must show draft first — per MEMORY.md"
+    },
+    {
+      "pattern": "billing.*",
+      "reason": "Financial/billing actions forbidden without explicit written approval — per MEMORY.md"
+    }
   ],
-
   "allowlist": [
-    { "agent": "*", "action": "file.read", "scope": "workspace/**" },
-    { "agent": "*", "action": "web.search" },
-    { "agent": "*", "action": "memory.read" },
-    { "agent": "*", "action": "memory.write", "scope": "memory/**" },
-    { "agent": "ninja", "action": "shell.npm_*" },
-    { "agent": "ninja", "action": "shell.node_*" },
-    { "agent": "ninja", "action": "shell.python3_*" },
-    { "agent": "ninja", "action": "shell.git_commit" }
+    {
+      "agent": "*",
+      "action": "file.read",
+      "scope": "workspace/**"
+    },
+    {
+      "agent": "*",
+      "action": "web.search"
+    },
+    {
+      "agent": "*",
+      "action": "memory.read"
+    },
+    {
+      "agent": "*",
+      "action": "memory.write",
+      "scope": "memory/**"
+    },
+    {
+      "agent": "ninja",
+      "action": "shell.npm_*"
+    },
+    {
+      "agent": "ninja",
+      "action": "shell.node_*"
+    },
+    {
+      "agent": "ninja",
+      "action": "shell.python3_*"
+    },
+    {
+      "agent": "ninja",
+      "action": "shell.git_commit"
+    }
   ],
-
   "rateLimits": {
     "global": {
       "requestsPerMinute": 30,
       "tokensPerHour": 500000
     },
     "perAgent": {
-      "default": { "requestsPerMinute": 10, "tokensPerHour": 100000 },
-      "main": { "requestsPerMinute": 15, "tokensPerHour": 200000 },
-      "ninja": { "requestsPerMinute": 15, "tokensPerHour": 150000 }
+      "default": {
+        "requestsPerMinute": 10,
+        "tokensPerHour": 100000
+      },
+      "main": {
+        "requestsPerMinute": 15,
+        "tokensPerHour": 200000
+      },
+      "ninja": {
+        "requestsPerMinute": 15,
+        "tokensPerHour": 150000
+      }
     }
   },
-
   "inputValidation": {
     "maxMessageLength": 10000,
     "maxFileUploadMb": 50,

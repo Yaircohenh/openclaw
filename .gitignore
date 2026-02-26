@@ -47,5 +47,8 @@ workspace/.openclaw/
 *.tar.gz
 *.sqlite
 
+# Cloned repos (separate GitHub repos)
+clawos-dashboard/
+
 # OS
 .DS_Store
