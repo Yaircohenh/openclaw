@@ -1,0 +1,158 @@
+project: clawos-status
+description: >
+  A Node.js CLI tool that reads agent configs (agents/*/config.json),
+  displays a formatted table of registered agents, and supports --json output.
+  Zero external dependencies — Node.js built-ins only.
+output_dir: /home/node/.openclaw/workspace/ops/projects/clawos-status/
+assigned_to: Ninja
+
+steps:
+
+  - id: step-1
+    name: Scaffold project structure
+    assigned_to: Ninja
+    depends_on: []
+    description: >
+      Create the project skeleton: package.json (private, no deps), bin/clawos-status.js,
+      lib/readConfigs.js, lib/formatTable.js, and test/clawos-status.test.js (empty stubs).
+    acceptance_criteria:
+      - package.json exists with `"type": "module"` or CommonJS (CJS preferred for broadest compat)
+      - `bin/clawos-status.js` has a shebang and is chmod +x
+      - `lib/readConfigs.js` stub exports a `readConfigs(pattern)` function signature
+      - `lib/formatTable.js` stub exports `formatTable(agents)` function signature
+      - `test/clawos-status.test.js` stub exists
+      - Directory tree is clean: no node_modules, no package-lock.json
+
+  - id: step-2
+    name: Implement config reader (lib/readConfigs.js)
+    assigned_to: Ninja
+    depends_on: [step-1]
+    description: >
+      Implement `readConfigs(baseDir)` using `fs` and `path` built-ins.
+      Glob agents/*/config.json via fs.readdirSync on the agents/ subdirectory
+      (no glob module — manual dir scan). For each found config.json, parse JSON,
+      extract: name, emoji, model, skills (array length), fileAccessPaths (array length).
+      Gracefully skip entries where the file is missing or JSON is malformed (log a warning to stderr).
+    acceptance_criteria:
+      - Reads from `<baseDir>/agents/*/config.json` pattern
+      - Returns array of objects: `{ name, emoji, model, skillsCount, pathsCount, raw }`
+      - Missing file → skipped with stderr warning, no crash
+      - Malformed JSON → skipped with stderr warning, no crash
+      - Empty agents dir → returns `[]`
+      - Works when `agents/` directory itself doesn't exist → returns `[]`
+
+  - id: step-3
+    name: Implement table formatter (lib/formatTable.js)
+    assigned_to: Ninja
+    depends_on: [step-1]
+    description: >
+      Implement `formatTable(agents)` that returns a string with:
+      - A header row: Name | Emoji | Model | Skills | Paths
+      - A separator row using dashes
+      - One row per agent, columns padded to align
+      - A blank line then summary: "X agents registered, Y total skills"
+      Column widths are dynamic (max of header and data widths).
+      Use only string operations — no external libs.
+    acceptance_criteria:
+      - Header and data columns are left-aligned and space-padded
+      - Separator line uses `-` characters matching each column width
+      - Summary line format: "X agents registered, Y total skills"
+      - Empty array → outputs "No agents registered." and "0 agents registered, 0 total skills"
+      - Returns a string (not console.log directly)
+
+  - id: step-4
+    name: Implement CLI entrypoint (bin/clawos-status.js)
+    assigned_to: Ninja
+    depends_on: [step-2, step-3]
+    description: >
+      Wire up the CLI. Parse process.argv for `--json` flag.
+      Determine baseDir: default to cwd, or accept optional positional arg as path to agents root.
+      Call readConfigs(baseDir), then:
+        - If --json: JSON.stringify the array (pretty-printed) to stdout
+        - Otherwise: formatTable(agents) to stdout
+      Exit code 0 on success, 1 on unrecoverable error (print to stderr).
+    acceptance_criteria:
+      - `node bin/clawos-status.js` outputs formatted table to stdout
+      - `node bin/clawos-status.js --json` outputs valid JSON array to stdout
+      - `node bin/clawos-status.js /some/path` reads agents from that path
+      - Unreadable baseDir → prints error to stderr, exits 1
+      - --help flag prints usage and exits 0
+
+  - id: step-5
+    name: Write tests (test/clawos-status.test.js)
+    assigned_to: Ninja
+    depends_on: [step-2, step-3, step-4]
+    description: >
+      Write a test file using Node.js built-in `node:test` and `assert` modules (Node 18+).
+      Tests use a temporary fixture directory created in os.tmpdir().
+      Clean up fixtures after each test.
+    test_cases:
+      - name: table output — 2 valid agents
+        description: >
+          Create 2 fixture configs. Run readConfigs + formatTable.
+          Assert output contains agent names, "2 agents registered", correct skills/paths counts.
+      - name: json output — 2 valid agents
+        description: >
+          Create 2 fixture configs. Run readConfigs, JSON.stringify result.
+          Assert valid JSON, array length 2, correct fields on each entry.
+      - name: graceful skip — malformed JSON
+        description: >
+          Create 1 valid + 1 malformed config. Assert only 1 agent returned, no crash.
+      - name: graceful skip — missing agents dir
+        description: >
+          Point baseDir at a dir with no agents/ subdir. Assert returns [].
+      - name: empty agents dir
+        description: >
+          Create agents/ dir with no subdirectories. Assert returns [].
+      - name: summary line accuracy
+        description: >
+          3 agents with skills counts [2, 3, 1]. Assert summary shows "3 agents registered, 6 total skills".
+    acceptance_criteria:
+      - All test cases pass with `node --test test/clawos-status.test.js`
+      - No external test framework required (node:test only)
+      - Fixtures are cleaned up after each test (no leftover tmp files)
+
+  - id: step-6
+    name: README and final polish
+    assigned_to: Ninja
+    depends_on: [step-5]
+    description: >
+      Write a concise README.md covering: what it does, usage examples, config schema,
+      how to run tests. Add a `test` script to package.json. Verify the tool runs
+      end-to-end against any real agents/ directory if one exists in the workspace.
+    acceptance_criteria:
+      - README.md covers installation, usage, --json flag, config schema
+      - `package.json` has `"scripts": { "test": "node --test test/clawos-status.test.js" }`
+      - `node bin/clawos-status.js` runs without errors from the project root
+      - All 6 test cases still pass
+
+config_schema:
+  description: Expected shape of agents/*/config.json
+  fields:
+    name:
+      type: string
+      required: true
+    emoji:
+      type: string
+      required: false
+      default: "🤖"
+    model:
+      type: string
+      required: false
+      default: "(unknown)"
+    skills:
+      type: array
+      required: false
+      default: []
+      note: skillsCount = skills.length
+    fileAccessPaths:
+      type: array
+      required: false
+      default: []
+      note: pathsCount = fileAccessPaths.length
+
+notes:
+  - All steps use CJS (require/module.exports) for broadest Node.js compat
+  - No package-lock.json or node_modules should be committed
+  - The tool should be runnable with plain `node` — no build step
+  - Errors to stderr, data to stdout — Unix-clean design

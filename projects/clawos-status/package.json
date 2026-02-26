@@ -1,0 +1,12 @@
+{
+  "name": "clawos-status",
+  "version": "0.1.0",
+  "description": "ClawOS agent status dashboard",
+  "private": true,
+  "bin": {
+    "clawos-status": "./bin/clawos-status.js"
+  },
+  "scripts": {
+    "test": "node --test test/clawos-status.test.js"
+  }
+}
