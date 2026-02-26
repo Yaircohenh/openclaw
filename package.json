@@ -1,10 +1,8 @@
 {
   "name": "clawos",
-  "version": "1.0.0",
+  "version": "1.2.0-beta",
   "private": true,
   "scripts": {
-    "test": "node --test tests/configs.test.mjs",
-    "test:dashboard": "cd apps/dashboard && npm run build",
-    "validate": "npm test && npm run test:dashboard"
+    "test": "node --test tests/configs.test.mjs"
   }
 }

@@ -44,24 +44,10 @@ jobs:
       - name: Run config tests
         run: node --test tests/configs.test.mjs
 
-  build-dashboard:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install dependencies
-        run: cd apps/dashboard && npm ci
-      - name: Build
-        run: cd apps/dashboard && npm run build
-
   docker-build:
     runs-on: ubuntu-latest
-    needs: [validate-configs, build-dashboard]
+    needs: [validate-configs]
     steps:
       - uses: actions/checkout@v4
       - name: Build gateway image
         run: docker build -f Dockerfile.prod -t clawos-gateway:ci .
-      - name: Build dashboard image
-        run: docker build -f apps/dashboard/Dockerfile -t clawos-dashboard:ci apps/dashboard/

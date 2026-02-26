@@ -6,7 +6,7 @@ DATE=$(date +%Y-%m-%d)
 EXPORT_DIR="/tmp/clawos-export-${DATE}"
 TARBALL="/workspace/clawos-config-${DATE}.tar.gz"
 
-CLAWOS_VERSION="1.0.0"
+CLAWOS_VERSION="1.2.0-beta"
 
 echo "=== ClawOS Export Script v${CLAWOS_VERSION} ==="
 echo "Packaging configuration for external installation..."

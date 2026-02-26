@@ -416,6 +416,24 @@ These apps were built by ClawOS agents and live in their own repos:
    └────┘  Plan → Build → Review → Fix → Deploy
 ```
 
+## Changelog
+
+### v1.2.0-beta (2026-02-26)
+- Fix gateway startup failures on macOS
+- Fix dashboard path resolution (cross-platform — no more hardcoded `/home/node/`)
+- Remove stale `apps/dashboard` references (dashboard lives in its own repo)
+- docker-compose now gateway-only
+- CI pipeline cleaned up (removed dashboard build job)
+- Version numbers aligned across all files
+
+### v1.1 (2026-02-25)
+- macOS installer fixes (sudo for npm, Xcode CLT check)
+- Beta installer (`setup-clawos.sh`) with 13-stage setup
+- Start/stop launcher scripts
+
+### v1.0 (2026-02-24)
+- Initial release: 8 agents, 5 skills, gateway, dashboard, operational framework
+
 ## License
 
 Private. Built on [OpenClaw](https://github.com/nichochar/open-claw).

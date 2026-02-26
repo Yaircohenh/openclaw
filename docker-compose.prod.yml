@@ -1,3 +1,6 @@
+# ClawOS Production — Gateway Only
+# Dashboard lives in its own repo: https://github.com/Yaircohenh/clawos-dashboard
+
 services:
   gateway:
     build:
@@ -14,17 +17,6 @@ services:
       test: ["CMD", "openclaw", "health"]
       interval: 30s
       timeout: 10s
-
-  dashboard:
-    build:
-      context: ./apps/dashboard
-      dockerfile: Dockerfile
-    ports:
-      - "3002:3002"
-    depends_on:
-      gateway:
-        condition: service_healthy
-    restart: unless-stopped
 
 volumes:
   clawos-state:

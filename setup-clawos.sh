@@ -20,7 +20,7 @@ DASH_PORT=3000
 GW_PORT=18789
 
 echo -e "\n${BOLD}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║     ClawOS Beta Installer v1.1       ║${NC}"
+echo -e "${BOLD}║     ClawOS Beta Installer v1.2       ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════╝${NC}\n"
 
 # ── Stage 1: Preflight checks ───────────────────────────────────
@@ -429,7 +429,7 @@ step 13 "Done!"
 
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║       ClawOS v1.1 installed!         ║${NC}"
+echo -e "${BOLD}║       ClawOS v1.2 installed!         ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  ${BOLD}Location:${NC}  $INSTALL_DIR"
