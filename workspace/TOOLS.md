@@ -271,3 +271,42 @@ workspace/scripts/check-progress.sh <project> <step_id>
 
 ### Agent Scores
 Performance tracking lives in `memory/agent-scores.json`. Ops updates scores after each QA cycle.
+
+## Fallback Chains
+
+When a primary agent is unavailable or struggling (score < 50), Tom routes to the fallback:
+
+| Primary | Fallback 1 | Fallback 2 | Notes |
+|---------|-----------|-----------|-------|
+| Ninja | CTO | Ops | CTO for architecture-adjacent, Ops for infra scripts only |
+| Ops | CTO | Ninja | CTO for review, Ninja for infra scripting (not deploys) |
+| CTO | Ninja | Ops | Ninja for code-level review, Ops for infra review |
+| Accounting | Finance | — | Finance can handle cost lookups |
+| Finance | Accounting | CTO | Accounting for data retrieval, CTO for cost-architecture tradeoffs |
+| Legal | CTO | — | CTO has security/compliance overlap |
+| Marketing | Legal | Ninja | Legal for compliance check, Ninja for landing page builds |
+
+### Fallback Rules
+1. **Inform the user** — tell Yair you're using a fallback and why
+2. **Reduced scope** — fallback agents handle at best-effort, not full specialty
+3. **Scoring still applies** — fallback work is scored the same way
+4. **Escalate if no fit** — if neither fallback can handle it, escalate to Yair
+
+## Permission Tiers
+
+Four tiers mapped to `security-policy.json`. Every handoff includes a `permission_tier` so agents know their boundaries.
+
+| Tier | Level | Actions | security-policy.json Policy |
+|------|-------|---------|----------------------------|
+| **1** | Open | Read files, web search, memory read | `allow` |
+| **2** | Logged | Write own workspace, npm install, preview deploy | `allow_with_logging` |
+| **3** | Approval | Git push, prod deploy, email, financial actions | `require_approval` |
+| **4** | Denied | sudo, rm -rf, calendar, social media, billing | `deny` |
+
+### Tier Assignment
+- **Routine tasks** (research, analysis, drafts): Tier 1-2
+- **Build tasks** (code, deploy previews): Tier 2
+- **Release tasks** (git push, prod deploy): Tier 3
+- **Restricted** (system admin, external comms): Tier 3-4
+
+When in doubt, assign the higher (more restrictive) tier. Agents can request a tier downgrade by escalating to Tom with justification.

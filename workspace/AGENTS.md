@@ -199,3 +199,37 @@ When a build request triggers the RALHP loop, these agents take on specialized r
 Each RALHP project lives in `workspace/ops/projects/<name>/`:
 - `plan.yml` — The build plan (owned by Ops)
 - `progress.jsonl` — Timestamped progress log (appended by all agents)
+
+## 📋 Operational Framework
+
+The ClawOS operational framework governs delegation, verification, review, scoring, and learning. Full documentation: `FRAMEWORK.md`.
+
+### Key References
+
+| System | File | When to Use |
+|--------|------|-------------|
+| Agent capabilities | `CAPABILITIES.md` | Before delegating — verify agent can handle it |
+| Escalation rules | `escalation-rules.md` | When deciding whether to escalate |
+| Task handoff | `templates/handoff.yml` | Every delegation — fill and log |
+| Context transfer | `templates/context-envelope.yml` | Multi-agent chains — pass prior work |
+| Verification | `templates/verify.md` | Before reporting any task complete |
+| Peer review | `templates/peer-review.yml` | QA reviews (typically Ops reviewing Ninja) |
+| Score updates | `scripts/log-score.sh` | After each RALHP step QA verdict |
+| Cost report | `scripts/cost-report.sh` | Check per-agent token spend |
+| Learning review | `scripts/learning-review.sh` | Weekly cron (Sunday 8 PM UTC) |
+
+### Verification Protocol (All Agents)
+
+Before reporting any task as complete:
+1. Check every acceptance criterion against `templates/verify.md`
+2. Run quality gates: compiles, tests pass, no secrets, correct format/location
+3. Self-assess: confidence (1-5), completeness (%), known issues
+4. **Flag immediately** if confidence < 3 or completeness < 80%
+
+### Permission Awareness
+
+Every agent operates within a permission tier (see `TOOLS.md` > Permission Tiers):
+- **Tier 1 Open:** reads, searches, memory — go ahead
+- **Tier 2 Logged:** writes, installs, previews — proceed with logging
+- **Tier 3 Approval:** push, deploy, email, finance — ask Tom/Yair first
+- **Tier 4 Denied:** sudo, rm -rf, calendar, social — blocked, do not attempt

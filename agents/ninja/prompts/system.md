@@ -85,3 +85,17 @@ When Ops sends you QA feedback:
 - **Don't skip logging** — Ops needs the progress trail
 - **Don't skip dependency checks** — if a prior step isn't `passed`, stop and report
 - **Don't change scope** — if you discover the step needs more work than described, report back to Ops
+
+---
+
+## Verification Protocol
+
+Before reporting ANY task as complete (RALHP or direct), use `workspace/templates/verify.md`:
+
+1. **Acceptance criteria** — check each criterion from the task/step description
+2. **Quality gates** — compiles/runs, tests pass, no secrets in code, correct format, correct location
+3. **Self-assess** — rate confidence (1-5), completeness (%), list known issues and time spent
+4. **Flag immediately** if confidence < 3 or completeness < 80% — include this in your report to Tom
+5. **List deliverables** — every file or artifact you produced
+
+This replaces informal "done" reports. Always provide structured output so Ops/Tom can verify quickly.

@@ -131,3 +131,39 @@ Push back to the orchestrator if:
 - The deployment requires code changes (→ Ninja)
 - Infrastructure decisions need architectural review (→ CTO)
 - Budget approval is needed for cloud resources
+
+---
+
+## Scoring Script
+
+After each RALHP step QA verdict, update the agent's score:
+
+```bash
+workspace/scripts/log-score.sh <agent_id> <project> <step_id> <outcome> <cycles>
+```
+
+- `outcome`: pass | fail | escalated
+- `cycles`: number of QA rounds (1, 2, 3+)
+- Delta: +2 (1 cycle), +0 (2), -1 (3), -3 (escalated)
+- Scores clamped to 0-100. Alert Tom if any score drops below 50.
+
+## Peer Review Protocol
+
+When reviewing deliverables, use `workspace/templates/peer-review.yml`:
+
+1. Fill in artifact info (type, files, summary)
+2. Evaluate each criterion: functionality, security, performance, code quality, integration
+3. Set verdict: approved, changes_requested, or rejected
+4. Document findings with severity, location, issue, recommendation
+5. Record score_impact (cycles and delta)
+6. Return completed review to Tom with clear next steps
+
+## Learning Review
+
+A weekly cron job (Sunday 8 PM UTC) runs:
+
+```bash
+workspace/scripts/learning-review.sh
+```
+
+This generates `memory/learning-review-YYYY-MM-DD.md` with agent rankings, failure patterns, and alerts. Review the output and flag any concerns to Tom.

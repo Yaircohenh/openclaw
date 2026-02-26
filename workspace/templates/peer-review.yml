@@ -1,0 +1,34 @@
+# Peer Review Template
+# Used when one agent reviews another's work (typically Ops reviewing Ninja).
+
+review_id: "<unique-id>"            # e.g., "pr-2026-02-26-ninja-api"
+timestamp: "<YYYY-MM-DD HH:MM>"
+author: "<agent_id>"                # Agent who produced the work
+reviewer: "<agent_id>"              # Agent performing the review
+task_ref: "<handoff_id or step_id>" # Links back to the original task
+
+artifact:
+  type: "<code|document|config|report>"
+  files:
+    - "<path/to/file>"
+  summary: |
+    <brief description of what was produced>
+
+review_criteria:
+  - functionality                   # Does it do what was asked?
+  - security                        # No secrets, no injection vectors
+  - performance                     # No obvious inefficiencies
+  - code_quality                    # Readable, follows conventions
+  - integration                     # Works with existing codebase
+
+verdict: "pending"                  # pending | approved | changes_requested | rejected
+
+findings:
+  - severity: "minor"              # minor | major | critical
+    location: "<file:line or section>"
+    issue: "<what's wrong>"
+    recommendation: "<how to fix>"
+
+score_impact:
+  cycles: 1                        # How many QA cycles this took
+  delta: 2                         # Score change: +2 (1st), +0 (2nd), -1 (3rd), -3 (escalated)

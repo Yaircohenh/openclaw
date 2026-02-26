@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+# Weekly learning review — extracts insights from agent scores and progress logs.
+# Usage: learning-review.sh [--output /path/to/report.md]
+#
+# Scans progress.jsonl files + agent-scores.json to generate:
+# - Top performers, struggling agents (<60), failure patterns, cycle efficiency
+# Writes to memory/learning-review-YYYY-MM-DD.md by default.
+
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+SCORES_FILE="$REPO_ROOT/memory/agent-scores.json"
+PROJECTS_DIR="$REPO_ROOT/workspace/ops/projects"
+DATE="$(date -u +%Y-%m-%d)"
+
+# Default output
+OUTPUT="$REPO_ROOT/memory/learning-review-$DATE.md"
+
+# Parse args
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --output) OUTPUT="$2"; shift 2 ;;
+    *) echo "Unknown option: $1" >&2; exit 1 ;;
+  esac
+done
+
+if [ ! -f "$SCORES_FILE" ]; then
+  echo "ERROR: Scores file not found at $SCORES_FILE" >&2
+  exit 1
+fi
+
+# Generate report via node
+node -e "
+const fs = require('fs');
+const path = require('path');
+
+const scores = JSON.parse(fs.readFileSync('$SCORES_FILE', 'utf8'));
+const projectsDir = '$PROJECTS_DIR';
+const date = '$DATE';
+
+let report = '# Learning Review — ' + date + '\n\n';
+report += 'Auto-generated weekly review of agent performance and patterns.\n\n';
+
+// --- Agent Scores Summary ---
+report += '## Agent Scores\n\n';
+report += '| Agent | Score | Completed | Failed | Avg Cycles | Streak | Last Updated |\n';
+report += '|-------|-------|-----------|--------|------------|--------|-------------|\n';
+
+const agents = Object.entries(scores).sort((a, b) => b[1].score - a[1].score);
+for (const [id, a] of agents) {
+  const streak = a.streak > 0 ? '+' + a.streak : String(a.streak);
+  const updated = a.last_updated ? a.last_updated.split('T')[0] : 'never';
+  report += '| ' + id + ' | ' + a.score + ' | ' + a.completed + ' | ' + a.failed + ' | ' + a.avg_cycles + ' | ' + streak + ' | ' + updated + ' |\n';
+}
+
+// --- Top Performers ---
+report += '\n## Top Performers\n\n';
+const top = agents.filter(([, a]) => a.score >= 80 && a.completed > 0);
+if (top.length > 0) {
+  for (const [id, a] of top) {
+    report += '- **' + id + '** — score ' + a.score + ', ' + a.completed + ' completed, avg ' + a.avg_cycles + ' cycles\n';
+  }
+} else {
+  report += 'No agents with score >= 80 and completed tasks yet.\n';
+}
+
+// --- Struggling Agents ---
+report += '\n## Struggling Agents (score < 60)\n\n';
+const struggling = agents.filter(([, a]) => a.score < 60);
+if (struggling.length > 0) {
+  for (const [id, a] of struggling) {
+    report += '- **' + id + '** — score ' + a.score + ' (completed: ' + a.completed + ', failed: ' + a.failed + ')\n';
+  }
+} else {
+  report += 'None — all agents above 60.\n';
+}
+
+// --- Critical Alerts ---
+report += '\n## Alerts\n\n';
+const critical = agents.filter(([, a]) => a.score < 50);
+if (critical.length > 0) {
+  for (const [id, a] of critical) {
+    report += '- **CRITICAL:** ' + id + ' score is ' + a.score + ' — escalate to Yair\n';
+  }
+} else {
+  report += 'No critical alerts.\n';
+}
+
+// --- Recent History Patterns ---
+report += '\n## Recent History\n\n';
+let totalHistory = 0;
+let passFirst = 0;
+let escalated = 0;
+
+for (const [id, a] of agents) {
+  if (a.history && a.history.length > 0) {
+    // Look at last 7 days of history
+    const recent = a.history.filter(h => {
+      const hDate = h.ts ? h.ts.split('T')[0] : '';
+      return hDate >= new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+    });
+    totalHistory += recent.length;
+    passFirst += recent.filter(h => h.outcome === 'pass' && h.cycles === 1).length;
+    escalated += recent.filter(h => h.outcome === 'escalated').length;
+  }
+}
+
+if (totalHistory > 0) {
+  report += '- **Total steps reviewed (last 7 days):** ' + totalHistory + '\n';
+  report += '- **First-try passes:** ' + passFirst + ' (' + Math.round(passFirst / totalHistory * 100) + '%)\n';
+  report += '- **Escalations:** ' + escalated + '\n';
+} else {
+  report += 'No recent history entries found.\n';
+}
+
+// --- Progress Log Summary ---
+report += '\n## Project Progress\n\n';
+try {
+  if (fs.existsSync(projectsDir)) {
+    const projects = fs.readdirSync(projectsDir).filter(d =>
+      fs.statSync(path.join(projectsDir, d)).isDirectory()
+    );
+    if (projects.length > 0) {
+      for (const proj of projects) {
+        const logFile = path.join(projectsDir, proj, 'progress.jsonl');
+        if (fs.existsSync(logFile)) {
+          const lines = fs.readFileSync(logFile, 'utf8').trim().split('\n').filter(l => l);
+          const passed = lines.filter(l => l.includes('\"passed\"')).length;
+          const failed = lines.filter(l => l.includes('\"failed\"')).length;
+          report += '- **' + proj + ':** ' + lines.length + ' log entries, ' + passed + ' passed, ' + failed + ' failed\n';
+        }
+      }
+    } else {
+      report += 'No projects found.\n';
+    }
+  } else {
+    report += 'No projects directory found.\n';
+  }
+} catch (e) {
+  report += 'Could not read projects directory.\n';
+}
+
+report += '\n---\n*Generated by learning-review.sh on ' + date + '*\n';
+
+fs.writeFileSync('$OUTPUT', report);
+console.log('Learning review written to: $OUTPUT');
+"

@@ -1,0 +1,31 @@
+# Context Envelope Template
+# Used for agent-to-agent context transfer in multi-agent task chains.
+# Tom fills this in when passing work from one agent to the next.
+
+envelope_id: "<unique-id>"           # e.g., "env-2026-02-26-deal-analysis-2"
+timestamp: "<YYYY-MM-DD HH:MM>"
+source: "<agent_id>"                 # Agent that just finished
+target: "<agent_id>"                 # Agent receiving the context
+task_chain: "<chain-name>"           # Overall task name (e.g., "deal-analysis")
+sequence: 1                          # Step number in the chain (1, 2, 3...)
+
+payload:
+  summary: |
+    <what the source agent accomplished>
+  key_outputs:
+    - "<file or artifact 1>"
+    - "<file or artifact 2>"
+  decisions_made:
+    - "<decision 1 and rationale>"
+  open_questions:
+    - "<question that needs resolution>"
+  constraints_for_next: |
+    <any constraints or requirements the next agent should know>
+
+chain_status:
+  completed_steps:
+    - "<step 1 description>"
+  remaining_steps:
+    - "<step 2 description>"
+    - "<step 3 description>"
+  blockers: []                       # Any blockers preventing progress

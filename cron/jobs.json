@@ -40,6 +40,22 @@
       "agent": "accounting",
       "task": "Run openclaw gateway usage-cost and save the output to memory under a Daily Cost Snapshot heading. Include total cost, token count, and per-agent breakdown if available. Compare with yesterday's snapshot and flag any unusual spikes (>2x increase). If daily cost exceeds $5 flag as warning, if >$20 flag as critical.",
       "enabled": true
+    },
+    {
+      "id": "news-brief",
+      "name": "Morning News Brief",
+      "schedule": "0 8 * * *",
+      "agent": "main",
+      "task": "Summarize the top 5 news stories relevant to the user's interests and deliver a concise morning brief.",
+      "enabled": true
+    },
+    {
+      "id": "weekly-learning-review",
+      "name": "Weekly Learning Review",
+      "schedule": "0 20 * * 0",
+      "agent": "ops",
+      "task": "Run workspace/scripts/learning-review.sh to generate the weekly learning review report. Review the output in memory/learning-review-YYYY-MM-DD.md. If any agent score is below 50, escalate to the orchestrator immediately. Summarize key findings.",
+      "enabled": true
     }
   ]
 }

@@ -1,4 +1,74 @@
 {
-  "ninja": { "score": 80, "completed": 0, "failed": 0, "avg_cycles": 0 },
-  "ops": { "score": 80, "completed": 0, "failed": 0, "avg_cycles": 0 }
+  "main": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "ninja": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "ops": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "cto": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "accounting": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "finance": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "legal": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  },
+  "marketing": {
+    "score": 80,
+    "completed": 0,
+    "failed": 0,
+    "avg_cycles": 0,
+    "streak": 0,
+    "last_updated": null,
+    "history": []
+  }
 }
