@@ -57,12 +57,17 @@ if [ -d cron ]; then
   echo "Installed cron jobs"
 fi
 
-# Copy workspace persona files
+# Copy full workspace tree (persona files, scripts, templates, ops/projects)
 if [ -d workspace ]; then
-  for f in workspace/*.md workspace/*.json; do
-    [ -f "$f" ] && cp "$f" "$WORKSPACE_DIR/"
-  done
+  cp -r workspace/* "$WORKSPACE_DIR/"
   echo "Installed workspace files"
+fi
+
+# Copy memory dir (agent-scores.json etc.)
+if [ -d memory ]; then
+  mkdir -p "$OPENCLAW_DIR/memory"
+  cp memory/* "$OPENCLAW_DIR/memory/" 2>/dev/null || true
+  echo "Installed memory files"
 fi
 
 # Copy shell completions
@@ -72,8 +77,17 @@ if [ -d completions ]; then
   echo "Installed shell completions"
 fi
 
+# Ensure openclaw.json exists before merging agents
+if [ ! -f "$OPENCLAW_DIR/openclaw.json" ]; then
+  echo "Creating openclaw.json..."
+  openclaw doctor --repair 2>/dev/null || true
+  if [ ! -f "$OPENCLAW_DIR/openclaw.json" ]; then
+    echo '{}' > "$OPENCLAW_DIR/openclaw.json"
+  fi
+fi
+
 # Merge agents list from config.json into openclaw.json
-if [ -f config.json ] && [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
+if [ -f config.json ]; then
   if command -v node >/dev/null 2>&1; then
     node -e "
       const fs = require('fs');
@@ -81,9 +95,22 @@ if [ -f config.json ] && [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
       const oc = JSON.parse(fs.readFileSync('$OPENCLAW_DIR/openclaw.json', 'utf-8'));
       if (config.agents?.list) {
         oc.agents = oc.agents || {};
-        oc.agents.list = config.agents.list;
+        oc.agents.list = config.agents.list.map(a => {
+          // Fix: use 'model' not 'defaultModel'
+          if (a.defaultModel && !a.model) {
+            a.model = a.defaultModel;
+            delete a.defaultModel;
+          }
+          return a;
+        });
+        // Ensure main agent can delegate to subagents
+        const main = oc.agents.list.find(a => a.id === 'main');
+        if (main) {
+          if (!main.subagents) main.subagents = {};
+          if (!main.subagents.allowAgents) main.subagents.allowAgents = ['*'];
+        }
         fs.writeFileSync('$OPENCLAW_DIR/openclaw.json', JSON.stringify(oc, null, 2) + '\n');
-        console.log('Merged ' + config.agents.list.length + ' agents into openclaw.json');
+        console.log('Merged ' + oc.agents.list.length + ' agents into openclaw.json');
       }
     " 2>&1 || echo "Warning: Could not merge agents list (non-fatal)"
   fi
@@ -92,6 +119,27 @@ fi
 echo ""
 echo "Running doctor to verify..."
 openclaw doctor --repair 2>&1 || true
+
+# Verification step
+echo ""
+echo "Verifying installation..."
+AGENT_COUNT=0
+PROMPT_MISSING=0
+if [ -d "$OPENCLAW_DIR/agents" ]; then
+  for agent_dir in "$OPENCLAW_DIR/agents"/*/; do
+    [ -d "$agent_dir" ] || continue
+    AGENT_COUNT=$((AGENT_COUNT + 1))
+    agent_name=$(basename "$agent_dir")
+    if [ ! -f "$agent_dir/prompts/system.md" ]; then
+      echo "  Warning: $agent_name missing prompts/system.md"
+      PROMPT_MISSING=$((PROMPT_MISSING + 1))
+    fi
+  done
+fi
+echo "  Agents installed: $AGENT_COUNT"
+if [ "$PROMPT_MISSING" -gt 0 ]; then
+  echo "  Warning: $PROMPT_MISSING agents missing system prompts"
+fi
 
 echo ""
 echo "Registered agents:"

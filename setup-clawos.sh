@@ -10,7 +10,7 @@ ok()   { echo -e "  ${GREEN}✔${NC} $1"; }
 fail() { echo -e "  ${RED}✘${NC} $1"; }
 info() { echo -e "  ${CYAN}→${NC} $1"; }
 warn() { echo -e "  ${YELLOW}!${NC} $1"; }
-step() { echo -e "\n${BOLD}[$1/12] $2${NC}"; }
+step() { echo -e "\n${BOLD}[$1/13] $2${NC}"; }
 
 INSTALL_DIR="$HOME/Projects/clawos"
 INFRA_DIR="$INSTALL_DIR/clawos-infra"
@@ -20,7 +20,7 @@ DASH_PORT=3000
 GW_PORT=18789
 
 echo -e "\n${BOLD}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║     ClawOS Beta Installer v1.0       ║${NC}"
+echo -e "${BOLD}║     ClawOS Beta Installer v1.1       ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════╝${NC}\n"
 
 # ── Stage 1: Preflight checks ───────────────────────────────────
@@ -105,10 +105,16 @@ else
   ok "No existing processes found"
 fi
 
-# ── Stage 3: Backup existing ~/.openclaw ─────────────────────────
+# ── Stage 3: Backup existing ~/.openclaw (preserve API keys) ─────
 step 3 "Backing up existing config"
 
+PRESERVED_KEYS=""
 if [ -d "$OPENCLAW_DIR" ]; then
+  # Preserve API keys from existing .env before wiping
+  if [ -f "$INSTALL_DIR/.env" ]; then
+    PRESERVED_KEYS=$(cat "$INSTALL_DIR/.env")
+    ok "Preserved API keys from .env"
+  fi
   BACKUP="$OPENCLAW_DIR.bak.$(date +%s)"
   mv "$OPENCLAW_DIR" "$BACKUP"
   ok "Backed up to $(basename "$BACKUP")"
@@ -217,8 +223,47 @@ bash install-clawos.sh 2>&1 | while IFS= read -r line; do
 done
 ok "Config installed"
 
-# ── Stage 10: Install & build dashboard ─────────────────────────
-step 10 "Building dashboard"
+# ── Stage 10: Persist API keys ────────────────────────────────────
+step 10 "Persisting API keys"
+
+ENV_FILE="$INSTALL_DIR/.env"
+
+# Re-inject preserved keys from previous install
+if [ -n "$PRESERVED_KEYS" ]; then
+  echo "$PRESERVED_KEYS" > "$ENV_FILE"
+  chmod 600 "$ENV_FILE"
+  ok "Restored API keys from previous install"
+fi
+
+# Save keys from current environment if not already in .env
+save_key_if_set() {
+  local key_name="$1"
+  local key_val="${!key_name:-}"
+  if [ -n "$key_val" ]; then
+    # Create file if missing
+    [ -f "$ENV_FILE" ] || touch "$ENV_FILE"
+    # Remove existing line, append new
+    grep -v "^${key_name}=" "$ENV_FILE" > "$ENV_FILE.tmp" 2>/dev/null || true
+    echo "${key_name}=${key_val}" >> "$ENV_FILE.tmp"
+    mv "$ENV_FILE.tmp" "$ENV_FILE"
+    chmod 600 "$ENV_FILE"
+  fi
+}
+
+save_key_if_set "ANTHROPIC_API_KEY"
+save_key_if_set "XAI_API_KEY"
+save_key_if_set "OPENAI_API_KEY"
+
+if [ -f "$ENV_FILE" ] && [ -s "$ENV_FILE" ]; then
+  KEY_COUNT=$(wc -l < "$ENV_FILE" | tr -d ' ')
+  ok "Saved $KEY_COUNT key(s) to $ENV_FILE (chmod 600)"
+else
+  warn "No API keys found in environment"
+  info "You can add them later:  echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $ENV_FILE"
+fi
+
+# ── Stage 11: Install & build dashboard ─────────────────────────
+step 11 "Building dashboard"
 
 cd "$DASH_DIR"
 info "Installing dependencies (this may take a minute)..."
@@ -229,8 +274,8 @@ info "Building Next.js app..."
 npm run build 2>&1 | tail -3
 ok "Dashboard built"
 
-# ── Stage 11: Generate launcher scripts ─────────────────────────
-step 11 "Creating launcher scripts"
+# ── Stage 12: Generate launcher scripts ─────────────────────────
+step 12 "Creating launcher scripts"
 
 # ── start.sh ──
 cat > "$INSTALL_DIR/start.sh" << 'STARTEOF'
@@ -244,11 +289,21 @@ PID_FILE="$INSTALL_DIR/.clawos.pids"
 GW_PORT=18789
 DASH_PORT=3000
 
+# Source API keys from .env if present
+ENV_FILE="$INSTALL_DIR/.env"
+if [ -f "$ENV_FILE" ]; then
+  set -a
+  source "$ENV_FILE"
+  set +a
+fi
+
 # Check API key
 if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
   echo -e "${RED}ERROR:${NC} ANTHROPIC_API_KEY is not set."
   echo ""
-  echo "  Run:  export ANTHROPIC_API_KEY=sk-ant-..."
+  echo "  Option 1:  echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $ENV_FILE"
+  echo "  Option 2:  export ANTHROPIC_API_KEY=sk-ant-..."
+  echo ""
   echo "  Then: bash start.sh"
   exit 1
 fi
@@ -276,9 +331,9 @@ else
   exit 1
 fi
 
-# Start dashboard
+# Start dashboard (pass CLAWOS_ENV_FILE so the dashboard can find keys)
 cd "$INSTALL_DIR/dashboard"
-npx next start -p $DASH_PORT > "$INSTALL_DIR/dashboard.log" 2>&1 &
+CLAWOS_ENV_FILE="$ENV_FILE" npx next start -p $DASH_PORT > "$INSTALL_DIR/dashboard.log" 2>&1 &
 DASH_PID=$!
 echo "$DASH_PID" >> "$PID_FILE"
 sleep 2
@@ -347,27 +402,32 @@ STOPEOF
 chmod +x "$INSTALL_DIR/stop.sh"
 ok "Created stop.sh"
 
-# ── Stage 12: Welcome message ───────────────────────────────────
-step 12 "Done!"
+# ── Stage 13: Welcome message ───────────────────────────────────
+step 13 "Done!"
 
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║       ClawOS installed!               ║${NC}"
+echo -e "${BOLD}║       ClawOS v1.1 installed!         ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  ${BOLD}Location:${NC}  $INSTALL_DIR"
+if [ -f "$INSTALL_DIR/.env" ] && [ -s "$INSTALL_DIR/.env" ]; then
+  echo -e "  ${BOLD}API keys:${NC}  $INSTALL_DIR/.env"
+else
+  echo ""
+  echo -e "  ${BOLD}Step 1 — Add your API key:${NC}"
+  echo -e "  ${CYAN}echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $INSTALL_DIR/.env${NC}"
+fi
 echo ""
-echo -e "  ${BOLD}Step 1 — Set your API key:${NC}"
-echo -e "  ${CYAN}export ANTHROPIC_API_KEY=sk-ant-...${NC}"
-echo ""
-echo -e "  ${BOLD}Step 2 — Start ClawOS:${NC}"
+echo -e "  ${BOLD}Start ClawOS:${NC}"
 echo -e "  ${CYAN}cd $INSTALL_DIR && bash start.sh${NC}"
 echo ""
-echo -e "  ${BOLD}Step 3 — Open the dashboard:${NC}"
+echo -e "  ${BOLD}Open the dashboard:${NC}"
 echo -e "  ${CYAN}http://localhost:$DASH_PORT${NC}"
 echo -e "  Password: ${CYAN}clawos${NC}"
 echo ""
 echo -e "  ${BOLD}Stop:${NC}  ${CYAN}cd $INSTALL_DIR && bash stop.sh${NC}"
+echo -e "  ${BOLD}Edit keys:${NC}  ${CYAN}nano $INSTALL_DIR/.env${NC}"
 echo ""
 echo -e "  Logs are in: $INSTALL_DIR/gateway.log & dashboard.log"
 echo ""
