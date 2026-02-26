@@ -46,6 +46,14 @@ if ! command -v npm >/dev/null 2>&1; then
 fi
 ok "npm $(npm --version)"
 
+# On macOS, git may be a stub that triggers Xcode CLT install dialog
+if [[ "$(uname)" == "Darwin" ]] && ! xcode-select -p >/dev/null 2>&1; then
+  fail "Xcode Command Line Tools not installed"
+  echo "    Run: xcode-select --install"
+  echo "    Then re-run this installer"
+  exit 1
+fi
+
 if ! command -v git >/dev/null 2>&1; then
   fail "git not found"
   echo "    Install: xcode-select --install  (macOS)"
@@ -204,7 +212,14 @@ if command -v openclaw >/dev/null 2>&1; then
   ok "OpenClaw already installed ($(openclaw --version 2>/dev/null || echo 'unknown version'))"
 else
   info "Installing openclaw via npm..."
-  npm install -g openclaw 2>&1 | tail -1
+  # Check if npm global prefix is writable (stock macOS Node needs sudo)
+  NPM_PREFIX="$(npm config get prefix)"
+  if [ -w "$NPM_PREFIX/lib" ] 2>/dev/null; then
+    npm install -g openclaw 2>&1 | tail -1
+  else
+    info "Global npm directory requires sudo..."
+    sudo npm install -g openclaw 2>&1 | tail -1
+  fi
   if command -v openclaw >/dev/null 2>&1; then
     ok "OpenClaw $(openclaw --version 2>/dev/null || echo 'installed')"
   else

@@ -10,7 +10,13 @@ command -v node >/dev/null 2>&1 || { echo "ERROR: Node.js is required. Install f
 
 if ! command -v openclaw >/dev/null 2>&1; then
   echo "OpenClaw not found. Installing..."
-  npm install -g openclaw
+  NPM_PREFIX="$(npm config get prefix)"
+  if [ -w "$NPM_PREFIX/lib" ] 2>/dev/null; then
+    npm install -g openclaw
+  else
+    echo "  (requires sudo for global npm install)"
+    sudo npm install -g openclaw
+  fi
 fi
 
 OPENCLAW_DIR="${OPENCLAW_DIR:-$HOME/.openclaw}"
