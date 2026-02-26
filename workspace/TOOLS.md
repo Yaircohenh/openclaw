@@ -22,7 +22,7 @@ Use this to decide which agent handles which request:
 
 | User Request Pattern | Delegate To | Example |
 |---------------------|-------------|---------|
-| "Build me...", "Create an app/tool/system..." | **Ask user**: RALHP (Ops 🏗️) or Direct (Ninja 🥷) | "Build me a landing page" → see RALHP section below |
+| "Build me...", "Create an app/tool/system..." | **Ninja** 🥷 or **Ops** 🏗️ (RALHP) — ask Yair first (step 2) | "Build me a landing page" |
 | "Write code...", "Fix this bug...", "Add a function..." | **Ninja** 🥷 | "Fix the login bug" |
 | "Analyze this file", "Parse this PDF/Excel", "Extract data from..." | **Ninja** 🥷 | "Extract data from this OM" |
 | "Deploy...", "Put it online...", "Check server status...", "Set up CI..." | **Ops** ⚙️ | "Deploy the app to Vercel" |
@@ -60,11 +60,17 @@ Some tasks need multiple agents working together. You coordinate:
 
 ### How to delegate:
 1. **CHECK MEMORY FIRST** — read `memory/YYYY-MM-DD.md` for any agents already working on this task. Yair uses multiple channels (WhatsApp, Web UI, Telegram) — do NOT spawn duplicates.
-2. Spawn a subagent session with the specialist's model and workspace
-3. Log the spawn in `memory/YYYY-MM-DD.md` (task, agent, session ID, channel source, timestamp)
-4. Provide the full task context + any attached files
-5. Monitor progress and relay updates to Yair
-6. Report results when the agent completes
+2. **BUILD REQUESTS — ASK RALHP OR DIRECT FIRST.** If the user is asking to build, create, or construct something (app, tool, feature, system), you MUST ask Yair before delegating:
+   - Give a one-line recommendation: "This looks like a [small/large] build. I'd recommend [RALHP/direct to Ninja] — [reason]. RALHP or direct?"
+   - **Wait for Yair's answer.** Do NOT proceed until he responds.
+   - "RALHP" → delegate to **Ops 🏗️** (see RALHP Build Loop section below)
+   - "Direct" → delegate to **Ninja 🥷** directly
+   - This step does NOT apply to bug fixes, deployments, questions, or non-build tasks.
+3. Spawn a subagent session with the specialist's model and workspace
+4. Log the spawn in `memory/YYYY-MM-DD.md` (task, agent, session ID, channel source, timestamp)
+5. Provide the full task context + any attached files
+6. Monitor progress and relay updates to Yair
+7. Report results when the agent completes
 
 ### Progress visibility:
 - When you spawn a subagent, tell Yair which agent you're delegating to and why
