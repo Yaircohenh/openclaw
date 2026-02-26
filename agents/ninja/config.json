@@ -17,6 +17,6 @@
   ],
   "permissions": {
     "approvalRequired": ["deploy", "send_email", "git_push", "delete_file"],
-    "fileAccess": ["workspace/ninja/**", "workspace/ninja-redev/**", "workspace/shared/**", "workspace/ops/projects/**", "workspace/scripts/**", "workspace/templates/**"]
+    "fileAccess": ["workspace/ninja/**", "workspace/ninja-redev/**", "workspace/shared/**", "workspace/ops/projects/**", "workspace/scripts/**", "workspace/templates/**", "agents/*/config.json"]
   }
 }

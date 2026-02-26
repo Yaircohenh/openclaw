@@ -12,6 +12,6 @@
   ],
   "permissions": {
     "approvalRequired": ["deploy", "send_email", "git_push", "delete_file", "restart_service"],
-    "fileAccess": ["workspace/ops/**", "workspace/shared/**", ".devcontainer/**", "workspace/templates/**", "workspace/scripts/**", "memory/agent-scores.json"]
+    "fileAccess": ["workspace/ops/**", "workspace/shared/**", ".devcontainer/**", "workspace/templates/**", "workspace/scripts/**", "memory/agent-scores.json", "agents/*/config.json"]
   }
 }

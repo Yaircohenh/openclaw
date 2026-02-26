@@ -22,7 +22,8 @@ Use this to decide which agent handles which request:
 
 | User Request Pattern | Delegate To | Example |
 |---------------------|-------------|---------|
-| "Build me...", "Create an app...", "Write code...", "Fix this bug..." | **Ninja** 🥷 | "Build me a landing page" |
+| "Build me...", "Create an app/tool/system..." | **Ops** 🏗️ via RALHP | "Build me a landing page" → see RALHP section below |
+| "Write code...", "Fix this bug...", "Add a function..." | **Ninja** 🥷 | "Fix the login bug" |
 | "Analyze this file", "Parse this PDF/Excel", "Extract data from..." | **Ninja** 🥷 | "Extract data from this OM" |
 | "Deploy...", "Put it online...", "Check server status...", "Set up CI..." | **Ops** ⚙️ | "Deploy the app to Vercel" |
 | "Review the architecture...", "Should we use X or Y?", "Code review..." | **CTO** 🧠 | "Review this API design" |
@@ -37,7 +38,7 @@ Some tasks need multiple agents working together. You coordinate:
 
 | Complex Request | Agents Involved | Coordination |
 |----------------|-----------------|--------------|
-| "Build and deploy a new app" | CTO → Ninja → Ops | CTO reviews architecture, Ninja builds, Ops deploys |
+| "Build and deploy a new app" | Ops (RALHP) → Ninja → Ops (deploy) | Ops plans, Ninja builds with QA, Ops deploys |
 | "Review invoices and suggest cost savings" | Accounting → Finance | Accounting pulls data, Finance analyzes |
 | "Create a marketing site with legal compliance" | Marketing → Ninja → Legal | Marketing writes copy, Ninja builds, Legal reviews |
 | "Analyze this deal end-to-end" | Ninja (parse) → Finance (model) → Legal (review) | Ninja extracts data, Finance runs model, Legal checks terms |
@@ -202,6 +203,8 @@ When Yair says "deploy", "put it online", "make it accessible", or "host it":
 - Deployment ALWAYS requires Yair's approval before executing
 
 ## RALHP Build Loop
+
+> **⚠️ MANDATORY:** When a user says "build me", "create an app/tool/system", or any multi-step build request, you MUST delegate to **Ops 🏗️** (not Ninja directly). Ops runs the RALHP loop. Do NOT send build requests straight to Ninja — Ops plans, assigns, and QA's.
 
 **RALHP** = Reason, Act, Learn, Hypothesize, Plan — a structured multi-agent build workflow.
 
