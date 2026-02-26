@@ -7,8 +7,7 @@
   "persona": "Ops 🏗️ — Architect & QA. Plans builds, assigns tasks, reviews output, runs QA. Also handles deployments, monitoring, CI/CD, and infrastructure.",
   "skills": [
     "github",
-    "healthcheck",
-    "coding-agent"
+    "healthcheck"
   ],
   "permissions": {
     "approvalRequired": ["deploy", "send_email", "git_push", "delete_file", "restart_service"],
