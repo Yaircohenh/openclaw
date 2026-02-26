@@ -239,7 +239,16 @@ curl -fsSL -H "Authorization: token $GITHUB_TOKEN" \
   https://raw.githubusercontent.com/Yaircohenh/openclaw/main/setup-clawos.sh | bash
 ```
 
-**Step 2 — Start it:**
+**Step 2 — Configure OpenClaw (first time only):**
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+openclaw setup
+```
+
+This creates `~/.openclaw/openclaw.json` with gateway settings. You only need to do this once.
+
+**Step 3 — Start it:**
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
@@ -255,6 +264,7 @@ git clone https://github.com/Yaircohenh/openclaw.git clawos
 cd clawos
 npm install -g openclaw
 export ANTHROPIC_API_KEY=sk-ant-...
+openclaw setup
 openclaw gateway run --port 18789 --bind loopback --auth token
 ```
 
@@ -266,13 +276,145 @@ Verify: `openclaw doctor && openclaw agents list`
 node --test tests/configs.test.mjs
 ```
 
+## Troubleshooting
+
+### Gateway failed to start
+
+```
+Missing config. Run `openclaw setup` or set gateway.mode=local
+```
+
+**Fix:** Run `openclaw setup` first — the gateway needs `~/.openclaw/openclaw.json` to exist. If you've already run setup and it still fails, try:
+
+```bash
+openclaw gateway run --port 18789 --bind loopback --auth token --allow-unconfigured
+```
+
+Check `~/Projects/clawos/gateway.log` for detailed errors.
+
+### Installer backed up my ~/.openclaw
+
+The installer moves your existing `~/.openclaw` to `~/.openclaw.bak.<timestamp>` before installing fresh configs. To restore:
+
+```bash
+# Stop ClawOS first
+cd ~/Projects/clawos && bash stop.sh
+
+# Restore your original config
+rm -rf ~/.openclaw
+mv ~/.openclaw.bak.<timestamp> ~/.openclaw
+```
+
+### Dashboard shows ERR_CONNECTION_REFUSED
+
+1. Make sure the gateway is running: `lsof -i :18789`
+2. Make sure the dashboard is running: `lsof -i :3000`
+3. If neither is running: `cd ~/Projects/clawos && bash start.sh`
+4. Check logs: `cat ~/Projects/clawos/gateway.log` and `cat ~/Projects/clawos/dashboard.log`
+
+### Port already in use
+
+```bash
+# Kill whatever is on port 3000
+lsof -ti:3000 | xargs kill -9
+
+# Kill whatever is on port 18789
+lsof -ti:18789 | xargs kill -9
+
+# Restart
+cd ~/Projects/clawos && bash start.sh
+```
+
+### Claude Code auth stuck in container
+
+If `claude` or `cc` tries browser login inside the Dev Container and gets stuck:
+
+```bash
+# The ANTHROPIC_API_KEY env var should bypass browser auth
+echo $ANTHROPIC_API_KEY  # verify it's set
+
+# Use print mode for one-shot tasks (always uses API key)
+claude -p --dangerously-skip-permissions "your task here"
+
+# For interactive mode, check auth status
+claude auth status
+```
+
+### API overloaded errors
+
+Anthropic occasionally has capacity issues. Check https://status.anthropic.com. The system will retry automatically, but during outages you may see `529 Overloaded` errors in agent logs.
+
+## Development
+
+### Dev Container (Claude Code Sandbox)
+
+The repo includes a `.devcontainer/` setup for autonomous Claude Code development:
+
+1. Open the repo in VS Code
+2. Click "Reopen in Container" (or `Cmd+Shift+P` → Dev Containers: Reopen)
+3. Inside the container: `cc` (alias for `claude --dangerously-skip-permissions`)
+
+Claude Code runs with full permissions inside the container. The container has Node.js 22, Python 3, Git, and GitHub CLI pre-installed.
+
+Ports 3000-3004 are forwarded via `appPort` in devcontainer.json.
+
+### Adding a New Agent
+
+```bash
+openclaw agents add <name> --model anthropic/claude-sonnet-4-6 --workspace ~/.openclaw/workspace/<name> --non-interactive
+openclaw agents set-identity --agent <name> --name "<Name>" --emoji "<emoji>"
+```
+
+Then create:
+- `agents/<name>/config.json` — model, workspace, skills
+- `agents/<name>/prompts/system.md` — system prompt
+- Update `workspace/CAPABILITIES.md` with the agent's strengths/weaknesses
+- Update `workspace/TOOLS.md` agent roster table
+- Update `config.json` agents list
+
+### Project Conventions
+
+- Apps built by agents go in their **own GitHub repos**, not in this one
+- This repo is **infrastructure only** — agent configs, templates, scripts, docs
+- All shell commands in dashboard API routes use `execFileSync` with array args (never string interpolation)
+- API keys and secrets are **never** committed — use `.env` files (gitignored) or env vars
+- Agent scoring data lives in `memory/agent-scores.json`
+
 ## Exported Apps
 
 These apps were built by ClawOS agents and live in their own repos:
 
-- [clawos-dashboard](https://github.com/Yaircohenh/clawos-dashboard) — Next.js control panel
-- [redev-model](https://github.com/Yaircohenh/redev-model) — Real estate financial model
-- [invoice-manager](https://github.com/Yaircohenh/invoice-manager) — Invoice management system
+| App | Repo | Description |
+|-----|------|-------------|
+| Dashboard | [clawos-dashboard](https://github.com/Yaircohenh/clawos-dashboard) | Next.js control panel with 15 pages |
+| Redev Model | [redev-model](https://github.com/Yaircohenh/redev-model) | Multifamily real estate financial model |
+| Invoice Manager | [invoice-manager](https://github.com/Yaircohenh/invoice-manager) | Invoice management + cash flow dashboard |
+
+## Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────┐
+│                    User                          │
+│         (WhatsApp / Telegram / Web UI)           │
+└───────────────────┬─────────────────────────────┘
+                    │
+┌───────────────────▼─────────────────────────────┐
+│              OpenClaw Gateway                     │
+│         (WebSocket, port 18789)                   │
+└───────────────────┬─────────────────────────────┘
+                    │
+┌───────────────────▼─────────────────────────────┐
+│              Tom 🚀 (Orchestrator)               │
+│     Routes tasks, relays results, logs scores    │
+└──┬────┬────┬────┬────┬────┬────┬────────────────┘
+   │    │    │    │    │    │    │
+   ▼    ▼    ▼    ▼    ▼    ▼    ▼
+  Ops  Ninja CTO  Acc  Fin  Leg  Mkt
+  🏗️   🥷   🧠   📊   💰   ⚖️   📣
+   │    ▲
+   │    │  (RALHP Loop)
+   └────┘  Plan → Build → Review → Fix → Deploy
+```
 
 ## License
 
