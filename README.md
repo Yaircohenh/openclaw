@@ -214,10 +214,11 @@ ClawOS/
 
 ### Option A: One-Click (macOS)
 
-1. Download [`ClawOS-Installer.command`](https://raw.githubusercontent.com/Yaircohenh/openclaw/main/ClawOS-Installer.command)
-2. Double-click it (if macOS blocks it: right-click → Open)
-3. Wait for installation to complete
-4. Set your API key and start:
+1. Download [**ClawOS-Installer.zip**](https://github.com/Yaircohenh/openclaw/releases/latest/download/ClawOS-Installer.zip)
+2. Extract (double-click the zip)
+3. Double-click **ClawOS-Installer.command** (if macOS blocks it: right-click → Open)
+4. Wait for installation to complete (~3 min)
+5. Set your API key and start:
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
