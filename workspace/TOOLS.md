@@ -200,3 +200,50 @@ When Yair says "deploy", "put it online", "make it accessible", or "host it":
 - Ops will run `vercel --yes --prod` and return the live URL
 - Share the URL with Yair
 - Deployment ALWAYS requires Yair's approval before executing
+
+## RALHP Build Loop
+
+**RALHP** = Reason, Act, Learn, Hypothesize, Plan — a structured multi-agent build workflow.
+
+### What It Is
+A planning/QA layer for non-trivial builds: **Tom → Ops (architect/QA) → Ninja (dev)**. Ops creates a structured plan, assigns steps to Ninja, reviews deliverables, and reports back to Tom.
+
+### Workflow
+1. **User** tells Tom: "Build me X"
+2. **Tom** delegates to Ops with: what to build, constraints, context, output location
+3. **Ops** creates a plan (`workspace/ops/projects/<name>/plan.yml`), breaks it into steps
+4. **Ops** assigns steps to Ninja with acceptance criteria
+5. **Ninja** builds, logs progress, submits for review
+6. **Ops** runs QA — PASS moves to next step, FAIL sends feedback
+7. **Ops** reports to Tom when the build is complete or blocked
+8. **Tom** relays the final result to Yair
+
+### When to Use RALHP
+
+| Request | Use RALHP? | Why |
+|---------|-----------|-----|
+| "Build me an app/tool/system" | **Yes** | Multi-step, needs planning |
+| "Create a new feature with tests" | **Yes** | Needs QA review |
+| "Fix this specific bug" | No | Single-step, direct delegation |
+| "Quick question / brainstorm" | No | No build involved |
+| "Deploy the app" | No | Single Ops task |
+| "Refactor the entire auth system" | **Yes** | Multi-step, needs oversight |
+
+### How to Delegate to Ops for RALHP
+Include in your delegation message:
+- **What** to build (clear goal)
+- **Constraints** (tech stack, deadlines, must-haves)
+- **Context** (related files, prior discussions, user preferences)
+- **Output location** (which repo or directory)
+
+### Monitoring Progress
+```bash
+# Check all steps for a project
+workspace/scripts/check-progress.sh <project>
+
+# Check a specific step
+workspace/scripts/check-progress.sh <project> <step_id>
+```
+
+### Agent Scores
+Performance tracking lives in `memory/agent-scores.json`. Ops updates scores after each QA cycle.

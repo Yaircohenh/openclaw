@@ -1,0 +1,49 @@
+# RALHP Build Plan Template
+# Copy this file to workspace/ops/projects/<project>/plan.yml and fill in.
+
+project: "<project-name>"
+goal: "<one-line description of what we're building>"
+requested_by: "Yair"
+created_at: "<YYYY-MM-DD HH:MM>"
+constraints:
+  - "<constraint 1>"
+  - "<constraint 2>"
+
+phases:
+  - name: "Phase 1 — <name>"
+    steps:
+      - id: "1.1"
+        title: "<step title>"
+        agent: "ninja"
+        description: |
+          <what to build/do>
+        acceptance_criteria:
+          - "<criterion 1>"
+          - "<criterion 2>"
+        depends_on: []
+        status: "pending"
+        qa_cycles: 0
+
+      - id: "1.2"
+        title: "<step title>"
+        agent: "ninja"
+        description: |
+          <what to build/do>
+        acceptance_criteria:
+          - "<criterion 1>"
+        depends_on: ["1.1"]
+        status: "pending"
+        qa_cycles: 0
+
+  - name: "Phase 2 — <name>"
+    steps:
+      - id: "2.1"
+        title: "<step title>"
+        agent: "ninja"
+        description: |
+          <what to build/do>
+        acceptance_criteria:
+          - "<criterion 1>"
+        depends_on: ["1.2"]
+        status: "pending"
+        qa_cycles: 0

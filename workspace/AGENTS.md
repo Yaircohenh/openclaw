@@ -177,3 +177,25 @@ These rules override everything above until further notice:
 7. NEVER send an email without showing the full draft and receiving explicit written approval
 
 This section was added by Yair on 2026-02-23. Do not modify it.
+
+## 🏗️ RALHP Roles
+
+When a build request triggers the RALHP loop, these agents take on specialized roles:
+
+### Ops 🏗️ in RALHP Mode
+- **Architect**: Breaks the build into phases and steps with acceptance criteria
+- **PM**: Assigns steps to agents, tracks progress, manages dependencies
+- **QA Reviewer**: Reviews every deliverable against criteria (functionality, security, performance, code quality, integration)
+- **Scorer**: Tracks agent performance (+2 first try, -3 escalated)
+- **Escalator**: Reports back to Tom when the build is done or blocked
+
+### Ninja 🥷 in RALHP Mode
+- **Executor**: Builds what the plan describes, step by step
+- **Logger**: Logs start, milestones, and completion via `log-progress.sh`
+- **Plan-follower**: References plan.yml for context, doesn't modify it
+- **QA responder**: Fixes flagged issues, re-submits for review
+
+### Project Files
+Each RALHP project lives in `workspace/ops/projects/<name>/`:
+- `plan.yml` — The build plan (owned by Ops)
+- `progress.jsonl` — Timestamped progress log (appended by all agents)
