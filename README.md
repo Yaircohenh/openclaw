@@ -212,35 +212,24 @@ ClawOS/
 
 ## Quick Start
 
-### Option A: One-Click (macOS)
+### Install (one command)
 
-1. Download [**ClawOS-Installer.zip**](https://github.com/Yaircohenh/openclaw/releases/latest/download/ClawOS-Installer.zip)
-2. Extract (double-click the zip)
-3. Double-click **ClawOS-Installer.command** (if macOS blocks it: right-click → Open)
-4. Wait for installation to complete (~3 min)
-5. Set your API key and start:
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-cd ~/Projects/clawos && bash start.sh
-```
-
-### Option B: One-Liner
+Open Terminal and paste:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Yaircohenh/openclaw/main/setup-clawos.sh | bash
 ```
 
-Then:
+Then start it:
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 cd ~/Projects/clawos && bash start.sh
 ```
 
-Dashboard at `http://localhost:3000` (password: `clawos`)
+Dashboard at `http://localhost:3000` (password: `clawos`). Stop with `bash stop.sh`.
 
-### Option C: Manual
+### Manual Install
 
 ```bash
 git clone https://github.com/Yaircohenh/openclaw.git clawos
