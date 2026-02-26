@@ -53,6 +53,33 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 ok "git $(git --version | awk '{print $3}')"
 
+# GitHub auth (private repos)
+GH_AUTHENTICATED=0
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+  GH_AUTHENTICATED=1
+  ok "GitHub CLI authenticated"
+elif [ -n "${GITHUB_TOKEN:-}" ]; then
+  GH_AUTHENTICATED=1
+  git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+  ok "GitHub token configured"
+else
+  fail "GitHub access not configured"
+  echo ""
+  echo "    The ClawOS repos are private. You need one of:"
+  echo ""
+  echo "    Option 1 — GitHub CLI (recommended):"
+  echo "      brew install gh"
+  echo "      gh auth login"
+  echo ""
+  echo "    Option 2 — Personal access token:"
+  echo "      1. Go to https://github.com/settings/tokens"
+  echo "      2. Generate new token (classic) with 'repo' scope"
+  echo "      3. Run: export GITHUB_TOKEN=ghp_your_token_here"
+  echo "      4. Re-run this installer"
+  echo ""
+  exit 1
+fi
+
 # ── Stage 2: Kill existing OpenClaw ─────────────────────────────
 step 2 "Stopping existing OpenClaw processes"
 

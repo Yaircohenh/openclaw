@@ -212,15 +212,34 @@ ClawOS/
 
 ## Quick Start
 
-### Install (one command)
+### Install
 
-Open Terminal and paste:
+**Step 0 — GitHub access** (private repo, one-time):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Yaircohenh/openclaw/main/setup-clawos.sh | bash
+# Option A: GitHub CLI (recommended)
+brew install gh
+gh auth login
+
+# Option B: Personal access token
+# 1. Go to https://github.com/settings/tokens
+# 2. Generate new token (classic) → check "repo" scope
+# 3. Export it:
+export GITHUB_TOKEN=ghp_your_token_here
 ```
 
-Then start it:
+**Step 1 — Run the installer:**
+
+```bash
+# If using gh CLI:
+curl -fsSL "$(gh api repos/Yaircohenh/openclaw/contents/setup-clawos.sh --jq .download_url)" | bash
+
+# If using token:
+curl -fsSL -H "Authorization: token $GITHUB_TOKEN" \
+  https://raw.githubusercontent.com/Yaircohenh/openclaw/main/setup-clawos.sh | bash
+```
+
+**Step 2 — Start it:**
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
