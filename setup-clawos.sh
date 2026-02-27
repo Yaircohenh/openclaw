@@ -331,6 +331,10 @@ if [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
 fi
 ok "Config installed"
 
+# Fix any unknown config keys (e.g. maxConcurrent) that OpenClaw rejects
+openclaw doctor --fix 2>/dev/null || true
+ok "Ran openclaw doctor --fix"
+
 # Kill any gateway that install-clawos.sh / doctor may have started
 openclaw gateway stop 2>/dev/null || true
 pkill -f "openclaw gateway" 2>/dev/null || true
@@ -345,6 +349,16 @@ ok "DM policy set to allowlist (strangers are silently blocked)"
 # Set gateway mode (required since OpenClaw v2026.2.24+, belt-and-suspenders)
 openclaw config set gateway.mode local 2>/dev/null || true
 ok "Gateway mode set to local"
+
+# Generate and persist gateway auth token
+GW_TOKEN=$(openssl rand -hex 32)
+openclaw config set gateway.auth.mode token 2>/dev/null || true
+openclaw config set gateway.auth.token "$GW_TOKEN" 2>/dev/null || true
+ok "Gateway auth token generated and persisted"
+
+# Allow control UI on non-loopback binding (required since OpenClaw v2026.2.26+)
+openclaw config set gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback true 2>/dev/null || true
+ok "Gateway control UI configured for LAN binding"
 
 # Unload the LaunchAgent that doctor installed (start.sh manages the gateway)
 launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
@@ -380,6 +394,15 @@ save_key_if_set() {
 save_key_if_set "ANTHROPIC_API_KEY"
 save_key_if_set "XAI_API_KEY"
 save_key_if_set "OPENAI_API_KEY"
+
+# Save gateway token to .env so start.sh and dashboard can use it
+if [ -n "${GW_TOKEN:-}" ]; then
+  [ -f "$ENV_FILE" ] || touch "$ENV_FILE"
+  grep -v "^OPENCLAW_GATEWAY_TOKEN=" "$ENV_FILE" > "$ENV_FILE.tmp" 2>/dev/null || true
+  echo "OPENCLAW_GATEWAY_TOKEN=${GW_TOKEN}" >> "$ENV_FILE.tmp"
+  mv "$ENV_FILE.tmp" "$ENV_FILE"
+  chmod 600 "$ENV_FILE"
+fi
 
 if [ -f "$ENV_FILE" ] && [ -s "$ENV_FILE" ]; then
   KEY_COUNT=$(wc -l < "$ENV_FILE" | tr -d ' ')

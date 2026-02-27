@@ -5,8 +5,7 @@
         "id": "main",
         "default": true,
         "subagents": {
-          "allowAgents": ["*"],
-          "maxConcurrent": 10
+          "allowAgents": ["*"]
         }
       },
       {
