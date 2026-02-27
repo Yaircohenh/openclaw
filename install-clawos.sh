@@ -141,6 +141,14 @@ echo ""
 echo "Running doctor to verify..."
 openclaw doctor --repair 2>&1 || true
 
+# Lock down DM policy — allowlist only, no pairing codes to strangers
+openclaw config set channels.whatsapp.dmPolicy allowlist 2>/dev/null || true
+openclaw config set channels.telegram.dmPolicy allowlist 2>/dev/null || true
+openclaw config set channels.discord.dmPolicy allowlist 2>/dev/null || true
+openclaw config set channels.slack.dmPolicy allowlist 2>/dev/null || true
+openclaw config set channels.signal.dmPolicy allowlist 2>/dev/null || true
+echo "DM policy set to allowlist (only approved senders)"
+
 # Kill any gateway that doctor may have started — start.sh manages it
 openclaw gateway stop 2>/dev/null || true
 pkill -f "openclaw gateway" 2>/dev/null || true

@@ -240,6 +240,11 @@ pkill -f "openclaw gateway" 2>/dev/null || true
 sleep 1
 ok "Cleaned up stale gateway processes"
 
+# Lock down DM policy — allowlist only, no pairing codes to strangers
+openclaw config set channels.whatsapp.dmPolicy allowlist 2>/dev/null || true
+openclaw config set channels.telegram.dmPolicy allowlist 2>/dev/null || true
+ok "DM policy set to allowlist (strangers are silently blocked)"
+
 # Set gateway mode (required since OpenClaw v2026.2.24+, belt-and-suspenders)
 openclaw config set gateway.mode local 2>/dev/null || true
 ok "Gateway mode set to local"

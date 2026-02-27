@@ -129,6 +129,14 @@
       "reason": "Social media access not enabled — per HEARTBEAT.md restricted mode",
       "riskScore": 1,
       "agents": "*"
+    },
+    {
+      "id": "channel-dm-policy",
+      "action": "channel.dm.*",
+      "policy": "deny",
+      "reason": "DM policy is allowlist-only — never send pairing codes or respond to unknown senders",
+      "riskScore": 1,
+      "agents": "*"
     }
   ],
   "denylist": [

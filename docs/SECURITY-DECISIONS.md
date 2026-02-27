@@ -42,6 +42,27 @@ openclaw config set agents.defaults.sandbox.network none
 openclaw sandbox recreate --all
 ```
 
+### 4. DM Policy Set to Allowlist (ENFORCED)
+
+**Issue:** Default OpenClaw DM policy is `pairing` — unknown senders receive a pairing code when they message the bot. During beta testing, random people who messaged the WhatsApp number received automated pairing responses from the system.
+
+**Decision:** ENFORCE `dmPolicy: "allowlist"` on ALL channels. Unknown senders are silently blocked — no pairing code, no response, no acknowledgment.
+
+**Implementation:**
+- `install-clawos.sh` sets `channels.*.dmPolicy = allowlist` for all supported channels
+- `setup-clawos.sh` sets it during Stage 9
+- Dashboard `channels/route.ts` sets it when saving any channel config
+- `security-policy.json` has a `channel.dm.*` deny rule
+
+**To approve a new sender:**
+```bash
+# The sender must first message the bot, then you approve manually:
+openclaw devices list           # see pending requests
+openclaw devices approve <code> # approve a specific sender
+```
+
+**Never change to `pairing` or `open`** — this would allow strangers to interact with the system or receive automated responses.
+
 ## Rate Limiting
 
 Rate limits configured in `workspace/security-policy.json`:

@@ -312,6 +312,26 @@ mv ~/.openclaw.bak.<timestamp> ~/.openclaw
 3. If neither is running: `cd ~/Projects/clawos && bash start.sh`
 4. Check logs: `cat ~/Projects/clawos/gateway.log` and `cat ~/Projects/clawos/dashboard.log`
 
+### Someone messaged my WhatsApp and got a response
+
+By default, ClawOS sets all channels to `dmPolicy: "allowlist"` — only approved senders can interact with the bot. Unknown senders are silently blocked.
+
+If you accidentally changed the DM policy, reset it:
+
+```bash
+openclaw config set channels.whatsapp.dmPolicy allowlist
+openclaw config set channels.telegram.dmPolicy allowlist
+```
+
+To approve a new sender (after they message the bot):
+
+```bash
+openclaw devices list           # see pending requests
+openclaw devices approve <code> # approve a specific sender
+```
+
+**Never use `dmPolicy: "pairing"` or `"open"`** — these will cause the bot to send automated responses to strangers.
+
 ### Port already in use
 
 ```bash
