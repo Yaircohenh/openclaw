@@ -70,10 +70,11 @@ Six systems govern how agents work:
 
 ### Dashboard
 
-A Next.js 16 control panel with 15 pages:
+A Next.js 16 control panel with 16 pages:
 
 | Page | What It Does |
 |------|-------------|
+| Setup Wizard | First-run guided setup (API keys, agents, channels) |
 | Chat | Talk to Tom via SSE streaming |
 | Monitor | Real-time agent activity grid |
 | Agents | Manage agents — model, name, emoji, score, files |
@@ -91,6 +92,8 @@ A Next.js 16 control panel with 15 pages:
 | Logs | Live log streaming |
 
 **Stack:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Sonner for toasts. Auth via password gate (set `DASHBOARD_PASSWORD` env). All API routes use `execFileSync` with array args for shell safety.
+
+On first launch, `/` redirects to `/setup` — a 6-step wizard (Welcome → Profile → API Keys → Agents → Channels → Review) that configures everything before you hit the dashboard. Once complete, `~/.openclaw/setup-complete` is written and subsequent visits go straight to the dashboard.
 
 **Repo:** [github.com/Yaircohenh/clawos-dashboard](https://github.com/Yaircohenh/clawos-dashboard)
 
@@ -166,7 +169,6 @@ openclaw gateway run --port 18789 --bind lan --auth token
 
 - `Dockerfile.prod` — gateway image
 - `docker-compose.prod.yml` — gateway + dashboard stack
-- `install-clawos.sh` — automated installation from tarball
 - `export-clawos.sh` — portable export (~80K)
 
 ## Repository Structure
@@ -199,7 +201,6 @@ ClawOS/
 ├── config.json                # Main agent roster (8 agents)
 ├── Dockerfile.prod            # Production gateway image
 ├── docker-compose.prod.yml    # Full-stack deployment
-├── install-clawos.sh          # Automated installer
 └── export-clawos.sh           # Portable export script
 ```
 
@@ -239,23 +240,15 @@ curl -fsSL -H "Authorization: token $GITHUB_TOKEN" \
   https://raw.githubusercontent.com/Yaircohenh/openclaw/main/setup-clawos.sh | bash
 ```
 
-**Step 2 — Configure OpenClaw (first time only):**
+**Step 2 — Start it:**
 
 ```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-openclaw setup
-```
-
-This creates `~/.openclaw/openclaw.json` with gateway settings. You only need to do this once.
-
-**Step 3 — Start it:**
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...
 cd ~/Projects/clawos && bash start.sh
 ```
 
-Dashboard at `http://localhost:3000` (password: `clawos`). Stop with `bash stop.sh`.
+**Step 3 — Setup wizard:**
+
+Open `http://localhost:3000` (password: `clawos`). On first launch you'll be guided through a 6-step setup wizard to configure your API keys, agents, and channels. Stop with `bash stop.sh`.
 
 ### Manual Install
 
@@ -406,7 +399,7 @@ These apps were built by ClawOS agents and live in their own repos:
 
 | App | Repo | Description |
 |-----|------|-------------|
-| Dashboard | [clawos-dashboard](https://github.com/Yaircohenh/clawos-dashboard) | Next.js control panel with 15 pages |
+| Dashboard | [clawos-dashboard](https://github.com/Yaircohenh/clawos-dashboard) | Next.js control panel with 16 pages |
 | Redev Model | [redev-model](https://github.com/Yaircohenh/redev-model) | Multifamily real estate financial model |
 | Invoice Manager | [invoice-manager](https://github.com/Yaircohenh/invoice-manager) | Invoice management + cash flow dashboard |
 
