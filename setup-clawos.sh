@@ -385,8 +385,7 @@ if [ -f "$ENV_FILE" ] && [ -s "$ENV_FILE" ]; then
   KEY_COUNT=$(wc -l < "$ENV_FILE" | tr -d ' ')
   ok "Saved $KEY_COUNT key(s) to $ENV_FILE (chmod 600)"
 else
-  warn "No API keys found in environment"
-  info "You can add them later:  echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $ENV_FILE"
+  warn "No API keys found in environment — the setup wizard will handle it"
 fi
 
 # ── Stage 12: Install & build dashboard ─────────────────────────
@@ -424,15 +423,9 @@ if [ -f "$ENV_FILE" ]; then
   set +a
 fi
 
-# Check API key
-if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-  echo -e "${RED}ERROR:${NC} ANTHROPIC_API_KEY is not set."
-  echo ""
-  echo "  Option 1:  echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $ENV_FILE"
-  echo "  Option 2:  export ANTHROPIC_API_KEY=sk-ant-..."
-  echo ""
-  echo "  Then: bash start.sh"
-  exit 1
+# Warn if no API keys configured (wizard will handle it)
+if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -z "${XAI_API_KEY:-}" ] && [ -z "${OPENAI_API_KEY:-}" ] && [ -z "${GOOGLE_API_KEY:-}" ]; then
+  echo -e "  ${CYAN}→${NC} No API keys configured — complete setup in the dashboard"
 fi
 
 echo -e "${BOLD}Starting ClawOS...${NC}\n"
@@ -532,32 +525,31 @@ STOPEOF
 chmod +x "$INSTALL_DIR/stop.sh"
 ok "Created stop.sh"
 
-# ── Stage 14: Welcome message ───────────────────────────────────
-step 14 "Done!"
+# ── Stage 14: Start ClawOS & open wizard ──────────────────────────
+step 14 "Starting ClawOS"
+
+info "Starting gateway + dashboard..."
+bash "$INSTALL_DIR/start.sh"
+
+# Open browser to setup wizard (macOS only, non-fatal)
+if [[ "$(uname)" == "Darwin" ]]; then
+  open "http://localhost:$DASH_PORT" 2>/dev/null || true
+fi
 
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║       ClawOS v1.2 installed!         ║${NC}"
+echo -e "${BOLD}║     ClawOS v1.2 is running!          ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════╝${NC}"
 echo ""
-echo -e "  ${BOLD}Location:${NC}  $INSTALL_DIR"
-if [ -f "$INSTALL_DIR/.env" ] && [ -s "$INSTALL_DIR/.env" ]; then
-  echo -e "  ${BOLD}API keys:${NC}  $INSTALL_DIR/.env"
-else
+echo -e "  ${BOLD}Dashboard:${NC}  ${CYAN}http://localhost:${DASH_PORT}${NC}"
+echo -e "  ${BOLD}Password:${NC}   ${CYAN}clawos${NC}"
+echo ""
+if [ ! -f "$INSTALL_DIR/.env" ] || [ ! -s "$INSTALL_DIR/.env" ]; then
+  echo -e "  ${BOLD}Next step:${NC}  Add your API keys in the setup wizard (step 3)"
   echo ""
-  echo -e "  ${BOLD}Step 1 — Add your API key:${NC}"
-  echo -e "  ${CYAN}echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $INSTALL_DIR/.env${NC}"
 fi
-echo ""
-echo -e "  ${BOLD}Start ClawOS:${NC}"
-echo -e "  ${CYAN}cd $INSTALL_DIR && bash start.sh${NC}"
-echo ""
-echo -e "  ${BOLD}Open the dashboard:${NC}"
-echo -e "  ${CYAN}http://localhost:$DASH_PORT${NC}"
-echo -e "  Password: ${CYAN}clawos${NC}"
-echo ""
-echo -e "  ${BOLD}Stop:${NC}  ${CYAN}cd $INSTALL_DIR && bash stop.sh${NC}"
-echo -e "  ${BOLD}Edit keys:${NC}  ${CYAN}nano $INSTALL_DIR/.env${NC}"
-echo ""
-echo -e "  Logs are in: $INSTALL_DIR/gateway.log & dashboard.log"
+echo -e "  ${BOLD}Location:${NC}  $INSTALL_DIR"
+echo -e "  ${BOLD}Stop:${NC}      ${CYAN}cd $INSTALL_DIR && bash stop.sh${NC}"
+echo -e "  ${BOLD}Restart:${NC}   ${CYAN}cd $INSTALL_DIR && bash start.sh${NC}"
+echo -e "  ${BOLD}Logs:${NC}      gateway.log, dashboard.log"
 echo ""
