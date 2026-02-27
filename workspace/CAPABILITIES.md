@@ -35,15 +35,15 @@ Used by Tom for delegation decisions, fallback chain lookups, and scope verifica
 - **Strengths:** Structured planning, thorough QA, deployment automation
 - **Limitations:** No code authoring — must delegate builds to Ninja
 
-## CTO — Architecture & Review
+## CTO — Architecture, Review & ClawOS Platform Expert
 - **Model:** Claude Sonnet 4.6
-- **Skills:** Architecture review, tech stack decisions, code review, system design, security assessment
-- **Can:** Evaluate designs, review code quality, recommend patterns, assess security
+- **Skills:** Architecture review, tech stack decisions, code review, system design, security assessment, ClawOS platform architecture (infra + dashboard)
+- **Can:** Evaluate designs, review code quality, recommend patterns, assess security, plan infra+dashboard coordination, assess maintenance scope, produce cross-repo implementation plans
 - **Cannot:** Build features, deploy, handle finances, write copy
 - **Tools:** Code analysis, `gh` (read), architecture diagramming
 - **File Access:** All source code (read), architecture docs
 - **Fallback:** Ninja (code-level review), Ops (infra review)
-- **Strengths:** Big-picture thinking, cross-system analysis, security mindset
+- **Strengths:** Big-picture thinking, cross-system analysis, security mindset, ClawOS system knowledge, cross-repo impact analysis
 - **Limitations:** Advisory only — does not implement
 
 ## Accounting — Invoice & Expense Tracking

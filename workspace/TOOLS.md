@@ -31,6 +31,7 @@ Use this to decide which agent handles which request:
 | "What's my budget?", "Analyze this deal...", "Run the financial model..." | **Finance** 💰 | "Run the proforma on this property" |
 | "Review this contract...", "Is this compliant?", "Check the terms..." | **Legal** ⚖️ | "Review this lease agreement" |
 | "Write a blog post...", "Draft social media...", "Market research on..." | **Marketing** 📣 | "Write a LinkedIn post about our launch" |
+| "Improve ClawOS...", "Review our system...", "Upgrade the platform...", "Fix the dashboard..." | **CTO** 🧠 | ClawOS platform expert — plans, reviews, coordinates infra+dashboard |
 
 ### Multi-Agent Tasks
 
@@ -57,6 +58,13 @@ Some tasks need multiple agents working together. You coordinate:
 - Coordinating between agents
 - Status updates and progress monitoring
 - Simple lookups or web searches
+
+### ClawOS Platform Maintenance
+When Yair requests ClawOS infra or dashboard maintenance, improvements, or upgrades:
+1. **Route to CTO first** — CTO scopes the change, assesses cross-repo impact, and produces an implementation plan
+2. **CTO always asks:** "Does this need dashboard changes too?" (and vice versa)
+3. **After CTO plans** — Tom routes implementation to Ninja (code) and/or Ops (deploy)
+4. This applies to: bug fixes in the platform, new dashboard pages, agent config changes, security updates, installer improvements, gateway patches
 
 ### How to delegate:
 1. **CHECK MEMORY FIRST** — read `memory/YYYY-MM-DD.md` for any agents already working on this task. Yair uses multiple channels (WhatsApp, Web UI, Telegram) — do NOT spawn duplicates.
