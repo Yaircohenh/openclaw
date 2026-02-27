@@ -16,7 +16,7 @@ INSTALL_DIR="$HOME/Projects/clawos"
 INFRA_DIR="$INSTALL_DIR/clawos-infra"
 DASH_DIR="$INSTALL_DIR/dashboard"
 OPENCLAW_DIR="$HOME/.openclaw"
-DASH_PORT=3000
+DASH_PORT=3005
 GW_PORT=18789
 
 echo -e "\n${BOLD}╔══════════════════════════════════════╗${NC}"
@@ -414,7 +414,7 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\03
 INSTALL_DIR="$(cd "$(dirname "$0")" && pwd)"
 PID_FILE="$INSTALL_DIR/.clawos.pids"
 GW_PORT=18789
-DASH_PORT=3000
+DASH_PORT=3005
 
 # Source API keys from .env if present
 ENV_FILE="$INSTALL_DIR/.env"
@@ -499,7 +499,7 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; BOLD='\033[1m'; NC='\033[0m'
 INSTALL_DIR="$(cd "$(dirname "$0")" && pwd)"
 PID_FILE="$INSTALL_DIR/.clawos.pids"
 GW_PORT=18789
-DASH_PORT=3000
+DASH_PORT=3005
 
 echo -e "${BOLD}Stopping ClawOS...${NC}\n"
 
