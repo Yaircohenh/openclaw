@@ -10,41 +10,34 @@
       },
       {
         "id": "ninja",
-        "workspace": "workspace/ninja",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "workspace/ninja"
       },
       {
         "id": "ops",
         "workspace": "workspace/ops",
-        "model": "anthropic/claude-sonnet-4-6",
         "subagents": {
           "allowAgents": ["ninja"]
         }
       },
       {
         "id": "cto",
-        "workspace": "workspace/cto",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "workspace/cto"
       },
       {
         "id": "accounting",
-        "workspace": "workspace/accounting",
-        "model": "anthropic/claude-haiku-4-5-20251001"
+        "workspace": "workspace/accounting"
       },
       {
         "id": "finance",
-        "workspace": "workspace/finance",
-        "model": "anthropic/claude-haiku-4-5-20251001"
+        "workspace": "workspace/finance"
       },
       {
         "id": "legal",
-        "workspace": "workspace/legal",
-        "model": "anthropic/claude-sonnet-4-6"
+        "workspace": "workspace/legal"
       },
       {
         "id": "marketing",
-        "workspace": "workspace/marketing",
-        "model": "anthropic/claude-haiku-4-5-20251001"
+        "workspace": "workspace/marketing"
       }
     ]
   }
