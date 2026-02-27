@@ -279,9 +279,56 @@ fi
 step 10 "Installing ClawOS config to ~/.openclaw"
 
 cd "$INFRA_DIR"
-bash install-clawos.sh 2>&1 | while IFS= read -r line; do
-  echo "    $line"
+
+# Copy agents (prompts + config)
+for agent_dir in agents/*/; do
+  agent_id=$(basename "$agent_dir")
+  mkdir -p "$OPENCLAW_DIR/agents/$agent_id/prompts"
+  [ -f "$agent_dir/prompts/system.md" ] && cp "$agent_dir/prompts/system.md" "$OPENCLAW_DIR/agents/$agent_id/prompts/"
+  [ -f "$agent_dir/config.json" ] && cp "$agent_dir/config.json" "$OPENCLAW_DIR/agents/$agent_id/"
 done
+ok "Agent configs installed"
+
+# Copy workspace files
+mkdir -p "$OPENCLAW_DIR/workspace/scripts" "$OPENCLAW_DIR/workspace/templates"
+cp workspace/*.md workspace/*.json "$OPENCLAW_DIR/workspace/" 2>/dev/null || true
+cp workspace/scripts/* "$OPENCLAW_DIR/workspace/scripts/" 2>/dev/null || true
+cp workspace/templates/* "$OPENCLAW_DIR/workspace/templates/" 2>/dev/null || true
+ok "Workspace installed"
+
+# Copy cron, skills, memory
+mkdir -p "$OPENCLAW_DIR/cron" "$OPENCLAW_DIR/memory"
+[ -f cron/jobs.json ] && cp cron/jobs.json "$OPENCLAW_DIR/cron/"
+[ -f memory/agent-scores.json ] && cp memory/agent-scores.json "$OPENCLAW_DIR/memory/"
+for skill_dir in skills/*/; do
+  skill_id=$(basename "$skill_dir")
+  mkdir -p "$OPENCLAW_DIR/skills/$skill_id"
+  [ -f "$skill_dir/manifest.json" ] && cp "$skill_dir/manifest.json" "$OPENCLAW_DIR/skills/$skill_id/"
+done
+ok "Cron, skills, memory installed"
+
+# Merge agents into openclaw.json (run openclaw setup first to create base config)
+openclaw setup 2>/dev/null || true
+if [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
+  node -e "
+    const fs = require('fs');
+    const infra = JSON.parse(fs.readFileSync('$INFRA_DIR/config.json', 'utf-8'));
+    const oc = JSON.parse(fs.readFileSync('$OPENCLAW_DIR/openclaw.json', 'utf-8'));
+    if (!oc.agents) oc.agents = {};
+    if (!oc.agents.list) oc.agents.list = [];
+    const existingIds = new Set(oc.agents.list.map(a => a.id));
+    for (const agent of infra.agents.list) {
+      if (!existingIds.has(agent.id)) oc.agents.list.push(agent);
+    }
+    const main = oc.agents.list.find(a => a.id === 'main' || a.default);
+    if (main) {
+      if (!main.subagents) main.subagents = {};
+      main.subagents.allowAgents = ['*'];
+    }
+    fs.writeFileSync('$OPENCLAW_DIR/openclaw.json', JSON.stringify(oc, null, 2) + '\n');
+  "
+  ok "Agents merged into openclaw.json"
+fi
 ok "Config installed"
 
 # Kill any gateway that install-clawos.sh / doctor may have started

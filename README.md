@@ -263,6 +263,15 @@ openclaw gateway run --port 18789 --bind lan --auth token
 
 Verify: `openclaw doctor && openclaw agents list`
 
+### Upgrade
+
+```bash
+cd ~/Projects/clawos/clawos-infra && bash upgrade.sh
+```
+
+Pulls latest code, syncs agent configs, rebuilds dashboard, and restarts.
+Your API keys, memory, sessions, and settings are preserved.
+
 ### Run Tests
 
 ```bash
