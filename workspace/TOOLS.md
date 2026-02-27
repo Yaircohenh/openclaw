@@ -71,6 +71,7 @@ Some tasks need multiple agents working together. You coordinate:
 5. Provide the full task context + any attached files
 6. Monitor progress and relay updates to Yair
 7. Report results when the agent completes
+8. **WAIT AND COMPILE** — before responding to the user, WAIT for ALL spawned agents to return their results. Compile their outputs into a single coherent response. Never tell the user "results are coming" — deliver the actual results.
 
 ### Progress visibility:
 - When you spawn a subagent, tell Yair which agent you're delegating to and why

@@ -161,7 +161,7 @@ Standardized formats for agent operations:
 ANTHROPIC_API_KEY=sk-... docker compose -f docker-compose.prod.yml up -d
 
 # Or manual
-openclaw gateway run --port 18789 --bind loopback --auth token
+openclaw gateway run --port 18789 --bind lan --auth token
 ```
 
 - `Dockerfile.prod` — gateway image
@@ -265,7 +265,7 @@ cd clawos
 npm install -g openclaw
 export ANTHROPIC_API_KEY=sk-ant-...
 openclaw setup
-openclaw gateway run --port 18789 --bind loopback --auth token
+openclaw gateway run --port 18789 --bind lan --auth token
 ```
 
 Verify: `openclaw doctor && openclaw agents list`
@@ -287,7 +287,7 @@ Missing config. Run `openclaw setup` or set gateway.mode=local
 **Fix:** Run `openclaw setup` first — the gateway needs `~/.openclaw/openclaw.json` to exist. If you've already run setup and it still fails, try:
 
 ```bash
-openclaw gateway run --port 18789 --bind loopback --auth token --allow-unconfigured
+openclaw gateway run --port 18789 --bind lan --auth token --allow-unconfigured
 ```
 
 Check `~/Projects/clawos/gateway.log` for detailed errors.

@@ -234,6 +234,12 @@ bash install-clawos.sh 2>&1 | while IFS= read -r line; do
 done
 ok "Config installed"
 
+# Kill any gateway that install-clawos.sh / doctor may have started
+openclaw gateway stop 2>/dev/null || true
+pkill -f "openclaw gateway" 2>/dev/null || true
+sleep 1
+ok "Cleaned up stale gateway processes"
+
 # Set gateway mode (required since OpenClaw v2026.2.24+, belt-and-suspenders)
 openclaw config set gateway.mode local 2>/dev/null || true
 ok "Gateway mode set to local"
@@ -342,7 +348,7 @@ openclaw config set gateway.mode local 2>/dev/null || true
 launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
 
 # Start gateway directly
-openclaw gateway run --port $GW_PORT --bind loopback --auth token --allow-unconfigured > "$INSTALL_DIR/gateway.log" 2>&1 &
+openclaw gateway run --port $GW_PORT --bind lan --auth token --allow-unconfigured > "$INSTALL_DIR/gateway.log" 2>&1 &
 GW_PID=$!
 echo "$GW_PID" > "$PID_FILE"
 sleep 3

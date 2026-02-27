@@ -128,6 +128,7 @@ if [ -f config.json ]; then
         if (main) {
           if (!main.subagents) main.subagents = {};
           if (!main.subagents.allowAgents) main.subagents.allowAgents = ['*'];
+          if (!main.subagents.maxConcurrent) main.subagents.maxConcurrent = 10;
         }
         fs.writeFileSync('$OPENCLAW_DIR/openclaw.json', JSON.stringify(oc, null, 2) + '\n');
         console.log('Merged ' + oc.agents.list.length + ' agents into openclaw.json');
@@ -139,6 +140,12 @@ fi
 echo ""
 echo "Running doctor to verify..."
 openclaw doctor --repair 2>&1 || true
+
+# Kill any gateway that doctor may have started — start.sh manages it
+openclaw gateway stop 2>/dev/null || true
+pkill -f "openclaw gateway" 2>/dev/null || true
+launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
+echo "Cleaned up stale gateway processes"
 
 # Verification step
 echo ""
