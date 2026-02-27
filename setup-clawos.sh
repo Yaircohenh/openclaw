@@ -10,7 +10,7 @@ ok()   { echo -e "  ${GREEN}✔${NC} $1"; }
 fail() { echo -e "  ${RED}✘${NC} $1"; }
 info() { echo -e "  ${CYAN}→${NC} $1"; }
 warn() { echo -e "  ${YELLOW}!${NC} $1"; }
-step() { echo -e "\n${BOLD}[$1/13] $2${NC}"; }
+step() { echo -e "\n${BOLD}[$1/14] $2${NC}"; }
 
 INSTALL_DIR="$HOME/Projects/clawos"
 INFRA_DIR="$INSTALL_DIR/clawos-infra"
@@ -225,8 +225,58 @@ else
   fi
 fi
 
-# ── Stage 9: Install ClawOS config ──────────────────────────────
-step 9 "Installing ClawOS config to ~/.openclaw"
+# ── Stage 9: Patch OpenClaw gateway bugs ─────────────────────────
+step 9 "Patching OpenClaw gateway"
+
+# Find the openclaw dist directory
+OPENCLAW_DIST="$(npm root -g)/openclaw/dist"
+if [ -d "$OPENCLAW_DIST" ]; then
+  PATCHED=0
+
+  # Patch 1: Strip thinking blocks from ALL session history
+  # Bug: gateway only strips thinking blocks for github-copilot provider,
+  # causing "thinking or redacted_thinking blocks cannot be modified" errors
+  # on Anthropic/xAI API calls when session history contains prior thinking blocks.
+  THINKING_FILES=$(grep -rl 'const dropThinkingBlocks = provider === "github-copilot"' "$OPENCLAW_DIST" 2>/dev/null || true)
+  if [ -n "$THINKING_FILES" ]; then
+    echo "$THINKING_FILES" | while read -r f; do
+      perl -pi -e 's/provider === "github-copilot" && modelId\.toLowerCase\(\)\.includes\("claude"\)/true/g' "$f"
+    done
+    PATCHED=$((PATCHED + 1))
+    ok "Patched: thinking blocks stripped from all session history"
+  else
+    ok "Thinking blocks patch already applied (or not needed)"
+  fi
+
+  # Patch 2: resolveFallbackRetryPrompt must always return params.body
+  # Bug: original function mangles the prompt on fallback retries, causing
+  # gateway startup failures when fallback models are configured.
+  FALLBACK_FILES=$(grep -rl 'function resolveFallbackRetryPrompt' "$OPENCLAW_DIST" 2>/dev/null || true)
+  if [ -n "$FALLBACK_FILES" ]; then
+    NEEDS_PATCH=0
+    for f in $FALLBACK_FILES; do
+      if ! grep -A1 'function resolveFallbackRetryPrompt' "$f" | grep -q 'return params.body;'; then
+        perl -0777 -pi -e 's/function resolveFallbackRetryPrompt\(params\) \{[^}]*\}/function resolveFallbackRetryPrompt(params) {\n\treturn params.body;\n}/g' "$f"
+        NEEDS_PATCH=1
+      fi
+    done
+    if [ "$NEEDS_PATCH" -eq 1 ]; then
+      PATCHED=$((PATCHED + 1))
+      ok "Patched: fallback retry prompt returns body directly"
+    else
+      ok "Fallback retry patch already applied (or not needed)"
+    fi
+  fi
+
+  if [ "$PATCHED" -gt 0 ]; then
+    info "$PATCHED gateway patch(es) applied — these survive until next 'npm update -g openclaw'"
+  fi
+else
+  warn "OpenClaw dist not found at $OPENCLAW_DIST — skipping patches"
+fi
+
+# ── Stage 10: Install ClawOS config ──────────────────────────────
+step 10 "Installing ClawOS config to ~/.openclaw"
 
 cd "$INFRA_DIR"
 bash install-clawos.sh 2>&1 | while IFS= read -r line; do
@@ -253,8 +303,8 @@ ok "Gateway mode set to local"
 launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
 ok "Disabled gateway LaunchAgent (start.sh manages it)"
 
-# ── Stage 10: Persist API keys ────────────────────────────────────
-step 10 "Persisting API keys"
+# ── Stage 11: Persist API keys ────────────────────────────────────
+step 11 "Persisting API keys"
 
 ENV_FILE="$INSTALL_DIR/.env"
 
@@ -292,8 +342,8 @@ else
   info "You can add them later:  echo 'ANTHROPIC_API_KEY=sk-ant-...' >> $ENV_FILE"
 fi
 
-# ── Stage 11: Install & build dashboard ─────────────────────────
-step 11 "Building dashboard"
+# ── Stage 12: Install & build dashboard ─────────────────────────
+step 12 "Building dashboard"
 
 cd "$DASH_DIR"
 info "Installing dependencies (this may take a minute)..."
@@ -304,8 +354,8 @@ info "Building Next.js app..."
 npm run build 2>&1 | tail -3
 ok "Dashboard built"
 
-# ── Stage 12: Generate launcher scripts ─────────────────────────
-step 12 "Creating launcher scripts"
+# ── Stage 13: Generate launcher scripts ─────────────────────────
+step 13 "Creating launcher scripts"
 
 # ── start.sh ──
 cat > "$INSTALL_DIR/start.sh" << 'STARTEOF'
@@ -435,8 +485,8 @@ STOPEOF
 chmod +x "$INSTALL_DIR/stop.sh"
 ok "Created stop.sh"
 
-# ── Stage 13: Welcome message ───────────────────────────────────
-step 13 "Done!"
+# ── Stage 14: Welcome message ───────────────────────────────────
+step 14 "Done!"
 
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
