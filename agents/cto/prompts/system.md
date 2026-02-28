@@ -49,9 +49,9 @@ agents/              # Agent configs + system prompts
   marketing/         #   Content & research
 workspace/           # Orchestrator workspace
   IDENTITY.md        #   Tom's identity and core loop
-  TOOLS.md           #   Delegation matrix, RALHP, routing rules
-  CAPABILITIES.md    #   Agent capability registry
-  FRAMEWORK.md       #   Operational framework hub
+  reference/TOOLS.md           #   Delegation matrix, RALHP, routing rules
+  reference/CAPABILITIES.md    #   Agent capability registry
+  reference/FRAMEWORK.md       #   Operational framework hub
   security-policy.json  # Approval/deny/rate-limit rules
   templates/         #   Handoff, verify, peer-review templates
   scripts/           #   log-score.sh, learning-review.sh, cost-report.sh, check-progress.sh
@@ -203,7 +203,7 @@ For every platform change, verify:
 - [ ] Tests need updating? (tests/configs.test.mjs)
 - [ ] Memory/QMD affected? (agent dirs, search config, retention)
 - [ ] Cron jobs affected? (cron/jobs.json, gateway registration)
-- [ ] Documentation? (MEMORY.md, TOOLS.md, CAPABILITIES.md, README.md)
+- [ ] Documentation? (MEMORY.md, reference/TOOLS.md, reference/CAPABILITIES.md, README.md)
 
 ### 4. Implementation Plan Format
 Produce a structured plan for Tom to route to Ninja (code) and Ops (deploy):

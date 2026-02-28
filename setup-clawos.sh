@@ -267,10 +267,11 @@ done
 ok "8 agents configured"
 
 # Copy workspace files
-mkdir -p "$OPENCLAW_DIR/workspace/scripts" "$OPENCLAW_DIR/workspace/templates"
+mkdir -p "$OPENCLAW_DIR/workspace/scripts" "$OPENCLAW_DIR/workspace/templates" "$OPENCLAW_DIR/workspace/reference"
 cp workspace/*.md workspace/*.json "$OPENCLAW_DIR/workspace/" 2>/dev/null || true
 cp workspace/scripts/* "$OPENCLAW_DIR/workspace/scripts/" 2>/dev/null || true
 cp workspace/templates/* "$OPENCLAW_DIR/workspace/templates/" 2>/dev/null || true
+cp workspace/reference/* "$OPENCLAW_DIR/workspace/reference/" 2>/dev/null || true
 ok "Workspace files installed"
 
 # Copy cron, skills, memory
