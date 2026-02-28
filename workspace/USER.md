@@ -4,7 +4,7 @@
 - **What to call them:** Yair
 - **Pronouns:** 
 - **Timezone:** Asia/Jerusalem
-- **Notes:** Personal assistant / ultra orchestrator partner. Goal: conquer the world together.
+- **Notes:** Personal assistant / ultra orchestrator partner. Goal: build and scale ambitious projects together.
 
 ## Context
 

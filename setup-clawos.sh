@@ -285,7 +285,7 @@ done
 ok "Skills, cron jobs, and memory installed"
 
 # Merge agents into openclaw.json
-openclaw setup 2>/dev/null || true
+openclaw setup >/dev/null 2>&1 || true
 if [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
   node -e "
     const fs = require('fs');
@@ -313,28 +313,28 @@ if [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
 fi
 
 # Clean up any remaining invalid config keys
-openclaw doctor --fix 2>/dev/null || true
+openclaw doctor --fix >/dev/null 2>&1 || true
 ok "Config validated"
 
 # Kill any gateway that doctor may have started
-openclaw gateway stop 2>/dev/null || true
+openclaw gateway stop >/dev/null 2>&1 || true
 pkill -f "openclaw gateway" 2>/dev/null || true
 sleep 1
 
 # Security: lock DM policy to allowlist
-openclaw config set channels.whatsapp.dmPolicy allowlist 2>/dev/null || true
-openclaw config set channels.telegram.dmPolicy allowlist 2>/dev/null || true
+openclaw config set channels.whatsapp.dmPolicy allowlist >/dev/null 2>&1 || true
+openclaw config set channels.telegram.dmPolicy allowlist >/dev/null 2>&1 || true
 ok "Security: DM policy set to allowlist"
 
 # Gateway configuration
-openclaw config set gateway.mode local 2>/dev/null || true
+openclaw config set gateway.mode local >/dev/null 2>&1 || true
 
 GW_TOKEN=$(openssl rand -hex 32)
-openclaw config set gateway.auth.mode token 2>/dev/null || true
-openclaw config set gateway.auth.token "$GW_TOKEN" 2>/dev/null || true
+openclaw config set gateway.auth.mode token >/dev/null 2>&1 || true
+openclaw config set gateway.auth.token "$GW_TOKEN" >/dev/null 2>&1 || true
 ok "Gateway auth token generated"
 
-openclaw config set gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback true 2>/dev/null || true
+openclaw config set gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback true >/dev/null 2>&1 || true
 
 # Unload the LaunchAgent (start.sh manages the gateway)
 launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
@@ -457,13 +457,13 @@ fi
 echo -e "${BOLD}Starting ClawOS...${NC}\n"
 
 # Stop any existing processes
-openclaw gateway stop 2>/dev/null || true
+openclaw gateway stop >/dev/null 2>&1 || true
 pkill -f "openclaw gateway" 2>/dev/null || true
 pkill -f "next start" 2>/dev/null || true
 sleep 1
 
 # Configure gateway
-openclaw config set gateway.mode local 2>/dev/null || true
+openclaw config set gateway.mode local >/dev/null 2>&1 || true
 launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true
 
 # Start gateway
@@ -527,7 +527,7 @@ if [ -f "$PID_FILE" ]; then
   rm -f "$PID_FILE"
 fi
 
-openclaw gateway stop 2>/dev/null && STOPPED=1 || true
+openclaw gateway stop >/dev/null 2>&1 && STOPPED=1 || true
 pkill -f "openclaw gateway" 2>/dev/null && STOPPED=1 || true
 pkill -f "next start" 2>/dev/null && STOPPED=1 || true
 launchctl bootout "gui/$(id -u)/ai.openclaw.gateway" 2>/dev/null || true

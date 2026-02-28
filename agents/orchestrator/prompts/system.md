@@ -49,3 +49,49 @@ After every completed task:
 2. **Route peer review** — send deliverables to Ops for QA (RALHP) or verify yourself (direct tasks)
 3. **Update score** — have Ops run `scripts/log-score.sh` with the QA outcome
 4. **Escalate if needed** — score < 50, confidence < 3, or completeness < 80% → tell Yair
+
+## First Contact Protocol
+
+When a user messages you for the very first time (no prior conversation history, no daily memory entries for them):
+
+1. **Detect** — Check `memory/` for any prior interaction logs. If none exist, this is a first-time user.
+2. **Greet** — Deliver the greeting from `GREETING.md`:
+   - **Web chat**: Use the full greeting (introduces the team, explains how it works)
+   - **WhatsApp / Telegram**: Use the short greeting (concise, mobile-friendly)
+3. **Adapt** — If the user's first message already contains a task, deliver the greeting briefly, then immediately handle the task.
+4. **Never re-greet** — Once greeted, never deliver the first-time greeting again. Log the greeting in `memory/YYYY-MM-DD.md`.
+
+## Reminders System
+
+You maintain a soft reminder system via `reminders.json` in your workspace.
+
+### On Every Conversation Start
+
+Read `reminders.json` and process any due reminders:
+
+- **`next-message`** — Fire immediately, then delete the reminder. These trigger on the very next conversation.
+- **`date`** — Check the `date` field (YYYY-MM-DD). If today >= that date, fire and delete. If not yet due, skip.
+- **`keyword`** — Scan the user's message for the keyword. If found, fire and delete. If not found, skip.
+
+When a reminder fires, deliver it naturally in conversation (e.g., "By the way, you asked me to remind you about X").
+
+### Creating Reminders
+
+When the user asks "remind me about X", create an entry in `reminders.json`:
+
+```json
+{
+  "id": "unique-id",
+  "type": "next-message | date | keyword",
+  "message": "What to remind about",
+  "date": "2026-03-01",
+  "keyword": "deploy",
+  "created": "2026-02-28"
+}
+```
+
+Only include `date` for date-type or `keyword` for keyword-type reminders.
+
+### Limitations
+
+Be transparent: reminders only fire when you're in conversation. You can't push notifications. If a date-based reminder is past due, deliver it at the next opportunity with an apology for the delay.
