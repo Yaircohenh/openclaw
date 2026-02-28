@@ -325,6 +325,11 @@ if [ -f "$OPENCLAW_DIR/openclaw.json" ]; then
       if (!main.subagents) main.subagents = {};
       main.subagents.allowAgents = ['*'];
     }
+    // Strip keys that OpenClaw rejects
+    for (const agent of oc.agents.list) {
+      delete agent.enabled;
+      if (agent.subagents) delete agent.subagents.maxConcurrent;
+    }
     fs.writeFileSync('$OPENCLAW_DIR/openclaw.json', JSON.stringify(oc, null, 2) + '\n');
   "
   ok "Agents merged into openclaw.json"
