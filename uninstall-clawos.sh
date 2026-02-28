@@ -17,7 +17,7 @@ echo -e "${BOLD}╚════════════════════�
 echo -e "This will remove:"
 echo -e "  • $INSTALL_DIR (infra, dashboard, scripts, logs)"
 echo -e "  • ~/.openclaw (config, agents, memory, sessions)"
-echo -e "  • openclaw CLI (npm global)"
+echo -e "  • ClawOS engine (npm global)"
 echo ""
 read -p "Are you sure? (y/N) " -n 1 -r
 echo ""
@@ -66,7 +66,7 @@ else
 fi
 
 # ── Remove CLI ──────────────────────────────────────────────────
-echo -e "${BOLD}[4/4] Removing OpenClaw CLI${NC}"
+echo -e "${BOLD}[4/4] Removing ClawOS engine${NC}"
 
 if command -v openclaw >/dev/null 2>&1; then
   NPM_PREFIX="$(npm config get prefix)"
@@ -75,9 +75,9 @@ if command -v openclaw >/dev/null 2>&1; then
   else
     sudo npm uninstall -g openclaw 2>/dev/null || true
   fi
-  ok "Uninstalled openclaw CLI"
+  ok "Engine uninstalled"
 else
-  ok "CLI not found (already removed)"
+  ok "Engine not found (already removed)"
 fi
 
 echo ""
