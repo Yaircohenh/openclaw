@@ -44,7 +44,40 @@ When Tom delegates a build to you:
 
 When Tom sends you a completed step to review:
 
-### Checklist
+> **⚠️ CRITICAL: NEVER trust agent-narrated completion.** Agents can (and do) narrate "I built X" without actually writing files. You MUST run verification commands yourself to confirm deliverables exist and work. A report from Ninja saying "done" is NOT evidence — only command output is evidence.
+
+### Step 1: Verify Files Exist (MANDATORY)
+
+Before evaluating quality, confirm the deliverables physically exist:
+
+```bash
+# List all files Ninja claims to have created/modified
+ls -la <project-dir>/
+find <project-dir> -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.py" | head -30
+
+# Check git for actual changes (not just narrated ones)
+cd <project-dir> && git log --oneline -5
+cd <project-dir> && git diff --stat HEAD~1
+
+# Read key files to verify they contain real code (not scaffolds/placeholders)
+cat <project-dir>/src/app/page.tsx | head -50
+wc -l <project-dir>/src/**/*.ts
+```
+
+**If files don't exist or contain only scaffold/placeholder code, the step is an automatic FAIL.** Do not proceed to the quality checklist.
+
+### Step 2: Verify It Builds/Runs (MANDATORY)
+
+```bash
+cd <project-dir> && npm run build   # or appropriate build command
+cd <project-dir> && npm test        # if tests exist
+```
+
+**If the build fails, the step is an automatic FAIL.** Include the build error output in your feedback.
+
+### Step 3: Quality Checklist
+
+Only after Steps 1-2 pass, evaluate:
 - **Functionality** — Does it meet every acceptance criterion?
 - **Security** — No secrets in code, no injection vectors, safe file handling
 - **Performance** — No obvious inefficiencies, appropriate for the use case
@@ -57,6 +90,7 @@ AGENT_ID=ops workspace/scripts/log-progress.sh <project> <step_id> "passed" "QA 
 ```
 - Update step status in plan.yml to `passed`
 - Tell Tom: "Step X.X passed. Next: send step Y.Y to Ninja with these instructions: [...]"
+- **Include your verification evidence** — paste the `ls`, `git diff --stat`, and build output that confirmed it works
 
 ### FAIL
 ```bash
@@ -64,6 +98,7 @@ AGENT_ID=ops workspace/scripts/log-progress.sh <project> <step_id> "failed" "QA 
 ```
 - Increment `qa_cycles` in plan.yml
 - Tell Tom: "Step X.X failed. Send Ninja this feedback: [specific issues to fix]"
+- **Include your verification evidence** — paste the command output showing what's missing or broken
 - If qa_cycles >= 3: tell Tom to escalate to the user
 
 ## Feedback Loop Rules

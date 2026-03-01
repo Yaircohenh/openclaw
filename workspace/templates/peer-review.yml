@@ -21,6 +21,14 @@ review_criteria:
   - code_quality                    # Readable, follows conventions
   - integration                     # Works with existing codebase
 
+# MANDATORY: Reviewer must run these commands and paste output below.
+# Reviews without verification_evidence are invalid.
+verification_evidence:
+  files_exist: ""                   # Paste output of: ls -la <project-dir>/src/
+  build_passes: ""                  # Paste output of: npm run build 2>&1 | tail -20
+  git_changes: ""                   # Paste output of: git diff --stat HEAD~1
+  key_file_content: ""              # Paste output of: cat <main-file> | head -50
+
 verdict: "pending"                  # pending | approved | changes_requested | rejected
 
 findings:

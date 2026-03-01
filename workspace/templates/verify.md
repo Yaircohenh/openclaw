@@ -40,6 +40,30 @@ Complete this before reporting a task as done.
 - [ ] ___ (file/artifact 1)
 - [ ] ___ (file/artifact 2)
 
+## Proof Artifacts (MANDATORY)
+
+> Reports without proof artifacts are automatically rejected. Paste actual command output below — narration is not proof.
+
+### File Listing
+```
+# Paste output of: find <project-dir>/src -type f | head -40
+```
+
+### Git Diff
+```
+# Paste output of: git diff --stat HEAD~1
+```
+
+### Build Output
+```
+# Paste output of: cd <project-dir> && npm run build 2>&1 | tail -20
+```
+
+### Key File Content
+```
+# Paste output of: cat <main-file> (at least one key file)
+```
+
 ## Sign-off
 
 - **Agent:** ___

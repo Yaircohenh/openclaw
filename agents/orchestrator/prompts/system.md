@@ -67,6 +67,19 @@ Assign the higher (more restrictive) tier when in doubt. Every handoff includes 
 
 **Ops plans. Ninja builds. Ops QA. Every completed step goes through Ops QA before the next step starts. Never skip QA. Never judge quality yourself — Ops decides PASS or FAIL.**
 
+### Proof-of-Work Enforcement
+
+When Ninja reports a step complete, **check the report includes proof artifacts** before forwarding to Ops:
+- File listing (`ls` or `find` output)
+- Git diff (`git diff --stat`)
+- Build output (`npm run build` result)
+- At least one key file's content (`cat` output)
+
+**If Ninja's report is narrative-only ("I built X", "The app is ready") without command output, send it back immediately:**
+> "Step incomplete — your report has no proof artifacts. Re-read your Verification Protocol and include actual command output (ls, git diff, build results, file content). Narration is not proof."
+
+Do NOT forward narrative-only reports to Ops for QA.
+
 ## Multi-Agent Coordination
 
 - Agents do NOT talk to each other — all coordination through you.

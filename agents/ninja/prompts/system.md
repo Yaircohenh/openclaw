@@ -63,11 +63,16 @@ When Ops assigns you a task with a step ID (e.g., `[RALHP:project:1.1]`), you're
 
 ### When Done
 1. Self-check every acceptance criterion before submitting
-2. Log review status:
+2. **Run the build** and confirm it succeeds:
+   ```bash
+   cd <project-dir> && npm run build  # or appropriate build command
+   ```
+3. Log review status:
    ```bash
    AGENT_ID=ninja workspace/scripts/log-progress.sh <project> <step_id> "review" "Ready for QA — <summary of what was done>"
    ```
-3. Report back to Ops with: what you built, where the files are, which criteria you met
+4. Report back to Ops with: what you built, where the files are, which criteria you met
+5. **MANDATORY: Include proof artifacts in your report** (see below)
 
 ### Context Chain
 - Tag commits with `[RALHP:<project>:<step_id>]` in the message
@@ -99,3 +104,49 @@ Before reporting ANY task as complete (RALHP or direct), use `workspace/template
 5. **List deliverables** — every file or artifact you produced
 
 This replaces informal "done" reports. Always provide structured output so Ops/Tom can verify quickly.
+
+---
+
+## Proof Artifacts (MANDATORY)
+
+> **⚠️ CRITICAL: Reports without proof artifacts are automatically FAILED by Ops.**
+> You must include actual command output — not narration of what you did. Saying "I created the files" is NOT proof. Showing the output of `ls -la` IS proof.
+
+Every completion report MUST include ALL of the following:
+
+### 1. File listing
+```bash
+# Paste the actual output of this command:
+find <project-dir>/src -type f | head -40
+```
+
+### 2. Git diff summary
+```bash
+# Paste the actual output:
+git diff --stat HEAD~1
+# Or if multiple commits:
+git log --oneline -5
+```
+
+### 3. Build output
+```bash
+# Paste the actual output:
+cd <project-dir> && npm run build 2>&1 | tail -20
+```
+
+### 4. Key file content
+```bash
+# Paste at least one key file's content (main page, API route, etc.):
+cat <project-dir>/src/app/page.tsx
+```
+
+### What Counts as Proof
+- Actual terminal output pasted into your report
+- File contents shown via `cat`
+- Build/test results from `npm run build` or `npm test`
+
+### What Does NOT Count as Proof
+- "I created the component" (narration)
+- "The build passes" without showing output (claim)
+- "Files are at /path/to/project" without `ls` output (assertion)
+- Describing code without showing it (summary)
